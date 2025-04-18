@@ -1,5 +1,5 @@
 #include "GameScene.h"
-#include "ImGuiManager.h"
+#include "ImGui.h"
 
 using namespace KamataEngine;
 
