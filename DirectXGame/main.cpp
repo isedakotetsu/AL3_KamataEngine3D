@@ -7,12 +7,13 @@ using namespace KamataEngine;
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) 
 {
+	KamataEngine::Initialize(L"LE2C_04_イセダ_コテツ_AL3");
+	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
 	GameScene* gameScene = new GameScene();
 
 	gameScene->Initialize();
 
-	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
-	KamataEngine::Initialize(L"LE2C_04_イセダ_コテツ_AL3");
+	
 
 
 	while (true) 
