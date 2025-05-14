@@ -8,7 +8,8 @@ void GameScene::Initialize() {
 
 	////スプライトインスタンスの生成
 	// sprite_ = Sprite::Create(textureHandle_, {100, 50});
-
+	
+	
 	model_ = Model::Create();
 
 	blockModel_ = Model::Create();
@@ -24,6 +25,8 @@ void GameScene::Initialize() {
 	worldTransform_.Initialize();
 
 	camera_.Initialize();
+
+	camera_.farZ = 1000.0f;
 
 	// 要素数
 	const uint32_t kNumBlockVirtical = 10;
@@ -51,6 +54,9 @@ void GameScene::Initialize() {
 			worldTransformBlocks_[i][j]->Initialize();
 			worldTransformBlocks_[i][j]->translation_.x = kBlockWidth * j;
 			worldTransformBlocks_[i][j]->translation_.y = kBlockHeight * i;
+			skydome_ = new Skydome();
+			modelskydome_ = Model::CreateFromOBJ("skydome", true);
+			skydome_->Initialize(modelskydome_, &camera_);
 		}
 	}
 }
@@ -60,7 +66,7 @@ void GameScene::Update() {
 
 	// 自キャラの更新
 	player_->UpDate();
-
+	skydome_->Update();
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform*& worldTransformBlock : worldTransformBlockLine) {
 			if (!worldTransformBlock)
@@ -96,6 +102,7 @@ void GameScene::Update() {
 void GameScene::Draw() {
 
 	// player_->Draw();
+	skydome_->Draw();
 
 	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
 
@@ -117,8 +124,8 @@ GameScene::~GameScene() {
 	delete player_;
 
 	delete model_;
-
 	delete blockModel_;
+	delete modelskydome_;
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform*& worldTransformBlock : worldTransformBlockLine) {

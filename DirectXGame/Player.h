@@ -1,5 +1,6 @@
 #pragma once
 #include "KamataEngine.h"
+#include "Math.h"
 
 class Player {
 public:
@@ -22,8 +23,12 @@ private:
 	// ワールド変換データ
 	KamataEngine::WorldTransform worldTransform_;
 
+	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
+
 	// モデル
 	KamataEngine::Model* model_ = nullptr;
+
+	Math* math_ = nullptr;
 
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;

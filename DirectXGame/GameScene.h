@@ -3,6 +3,7 @@
 #include "Math.h"
 #include "Player.h"
 #include <vector>
+#include "Skydome.h"
 
 using namespace KamataEngine;
 
@@ -37,6 +38,8 @@ private:
 	////カメラ
 	Camera camera_;
 
+	
+
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
 
 	DebugCamera* debugCamera_ = nullptr;
@@ -45,6 +48,12 @@ private:
 	Player* player_ = nullptr;
 
 	Math* math_ = nullptr;
+
+	Model* modelskydome_ = nullptr;
+
+	Skydome* skydome_ = nullptr;
+
+	
 
 	// デバッグカメラ有効
 	bool isDebugCameraActive_ = false;
