@@ -9,9 +9,9 @@ enum class MapChipType {
 	kBlock, // ブロック
 };
 
-struct MapChipData {
-	std::vector<std::vector<MapChipType>> data;
-};
+//struct MapChipData {
+//	std::vector<std::vector<MapChipType>> data;
+//};
 /*
 struct Vector3 {
 	float x;
