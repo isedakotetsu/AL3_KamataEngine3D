@@ -26,7 +26,7 @@ public:
 	static inline const float kBlockWidth = 1.0f;
 	static inline const float kBlockHeight = 1.0f;
 //
-//	void ResetMapChipData();
+	void ResetMapChipData();
 //	void LoadMapChipCsv(const std::string& filePath);
 //	MapChipType GetMapChipTypeByIndex(uint32_t xIndex, uint32_t yIndex);
 //    Vector3 GetMapChipPositionByIndex(uint32_t xIndex, uint32_t yIndex);
