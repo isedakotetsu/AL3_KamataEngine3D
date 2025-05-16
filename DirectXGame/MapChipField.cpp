@@ -44,29 +44,29 @@ void MapChipField::LoadMapChipCsv(const std::string& filePath)
     //ファイルを閉じる
 	file.close();
 
-  //  //CSVからマップチップデータを読み込む
-  //  for (uint32_t i = 0; i < kNumBlockVirtical; ++i)
-  //  {
-		//std::string line;
-		//getline(mapChipCsv, line);
+    //CSVからマップチップデータを読み込む
+    for (uint32_t i = 0; i < kNumBlockVirtical; ++i)
+    {
+		std::string line;
+		getline(mapChipCsv, line);
 
-  //      //1行分の文字列をストリームに変換して解析しやすくする
-		//std::istringstream line_stream(line);
+        //1行分の文字列をストリームに変換して解析しやすくする
+		std::istringstream line_stream(line);
 
-  //      for (uint32_t j = 0; j < kNumBlockHorizontal; ++j)
-  //      {
-		//	std::string word;
+        for (uint32_t j = 0; j < kNumBlockHorizontal; ++j)
+        {
+			std::string word;
 
-  //          getline(line_stream, word, ',');
+            getline(line_stream, word, ',');
 
-  //          if (mapChipTable.contains(word))
-  //          {
-		//		mapChipData_.data[i][j] = mapChipTable[word];
-  //          }
+            if (mapChipTable.contains(word))
+            {
+				mapChipData_.data[i][j] = mapChipTable[word];
+            }
 
 
-  //      }
-  //  }
+        }
+    }
 
 
 
