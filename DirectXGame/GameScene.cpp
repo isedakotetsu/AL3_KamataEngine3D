@@ -101,7 +101,7 @@ void GameScene::Update() {
 
 void GameScene::Draw() {
 
-	// player_->Draw();
+	player_->Draw();
 	skydome_->Draw();
 
 	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
