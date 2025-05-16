@@ -9,9 +9,9 @@ enum class MapChipType {
 	kBlock, // ブロック
 };
 
-//struct MapChipData {
-//	std::vector<std::vector<MapChipType>> data;
-//};
+struct MapChipData {
+	std::vector<std::vector<MapChipType>> data;
+};
 /*
 struct Vector3 {
 	float x;
@@ -36,7 +36,7 @@ private:
 //	//ブロック個数
 	static inline const uint32_t kNumBlockVirtical = 20;
 	static inline const uint32_t kNumBlockHorizontal = 100;
-//	MapChipData mapChipData_;
-//
+	MapChipData mapChipData_;
+
 
 };
