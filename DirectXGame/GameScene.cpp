@@ -4,59 +4,67 @@ using namespace KamataEngine;
 
 void GameScene::Initialize() {
 	// ここにインゲームの初期化処理を書く
-	textureHandle_ = TextureManager::Load("mario.png");
+	// textureHandle_ = TextureManager::Load("player.png");
 
 	////スプライトインスタンスの生成
 	// sprite_ = Sprite::Create(textureHandle_, {100, 50});
-	
-	
+
 	model_ = Model::Create();
 
-	blockModel_ = Model::Create();
+	blockModel_ = Model::CreateFromOBJ("block");
 
 	debugCamera_ = new DebugCamera(1280, 720);
 
 	// 自キャラの生成
 	player_ = new Player();
 
+	 modelplayer_ = Model::CreateFromOBJ("player", true);
 	// 自キャラの初期化
-	player_->Initialize(model_, textureHandle_, &camera_);
+	 player_->Initialize(modelplayer_, &camera_);
 
 	worldTransform_.Initialize();
 
+	// カメラの初期化
 	camera_.Initialize();
 
 	camera_.farZ = 1000.0f;
 
-	// 要素数
-	const uint32_t kNumBlockVirtical = 10;
-	const uint32_t kNumBlockHorizontal = 20;
+	// 02_03天球
+	// skydome生成
+	skydome_ = new Skydome();
+	// 初期化
+	modelskydome_ = Model::CreateFromOBJ("skyDome", true);
+	skydome_->Initialize(modelskydome_, &camera_);
 
-	// ブロック1個分の横幅
-	const float kBlockWidth = 2.0f;
-	const float kBlockHeight = 2.0f;
+	mapChipField_ = new MapChipField;
+
+	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
+
+	GenerateBlocks();
+}
+
+void GameScene::GenerateBlocks() {
+	// 要素数
+	uint32_t numBlockVirtical = mapChipField_->GetNumBlockViritical();
+	uint32_t numBlockHorizontal = mapChipField_->GetNumBlockHorizontal();
 
 	// 要素数を変更する
 
-	worldTransformBlocks_.resize(kNumBlockVirtical);
+	worldTransformBlocks_.resize(numBlockVirtical);
 
 	// キューブの生成
-	for (uint32_t i = 0; i < kNumBlockVirtical; ++i) {
-		worldTransformBlocks_[i].resize(kNumBlockHorizontal);
+	for (uint32_t i = 0; i < numBlockVirtical; ++i) {
+		worldTransformBlocks_[i].resize(numBlockHorizontal);
 	}
 	// ブロックの生成
-	for (uint32_t i = 0; i < kNumBlockVirtical; ++i) {
-		for (uint32_t j = 0; j < kNumBlockHorizontal; ++j) {
-			if ((i + j) % 2 == 0) {
-				continue;
+	for (uint32_t i = 0; i < numBlockVirtical; ++i) {
+		for (uint32_t j = 0; j < numBlockHorizontal; ++j) {
+			if (mapChipField_->GetMapChipTypeByIndex(j, i) == MapChipType::kBlock) {
+				WorldTransform* worldTransform = new WorldTransform();
+				worldTransform->Initialize();
+				worldTransformBlocks_[i][j] = worldTransform;
+				worldTransformBlocks_[i][j]->translation_ = mapChipField_->GetMapChipPositionByIndex(j, i);
 			}
-			worldTransformBlocks_[i][j] = new WorldTransform();
-			worldTransformBlocks_[i][j]->Initialize();
-			worldTransformBlocks_[i][j]->translation_.x = kBlockWidth * j;
-			worldTransformBlocks_[i][j]->translation_.y = kBlockHeight * i;
-			skydome_ = new Skydome();
-			modelskydome_ = Model::CreateFromOBJ("skydome", true);
-			skydome_->Initialize(modelskydome_, &camera_);
 		}
 	}
 }
@@ -67,6 +75,7 @@ void GameScene::Update() {
 	// 自キャラの更新
 	player_->UpDate();
 	skydome_->Update();
+
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform*& worldTransformBlock : worldTransformBlockLine) {
 			if (!worldTransformBlock)
@@ -102,6 +111,8 @@ void GameScene::Update() {
 void GameScene::Draw() {
 
 	player_->Draw();
+
+	// 天球描画
 	skydome_->Draw();
 
 	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
@@ -112,25 +123,34 @@ void GameScene::Draw() {
 		for (WorldTransform*& worldTransformBlock : worldTransformBlockLine) {
 			if (!worldTransformBlock)
 				continue;
-			model_->Draw(*worldTransformBlock, camera_);
+			blockModel_->Draw(*worldTransformBlock, camera_);
 		}
 	}
+
+	// modelPlayer_->Draw(*worldTransformBlock, camera_);
+
 	Model::PostDraw();
 }
 
 GameScene::~GameScene() {
 	// delete sprite_;
 	delete debugCamera_;
-	delete player_;
 
 	delete model_;
-	delete blockModel_;
-	delete modelskydome_;
 
+	delete blockModel_;
+
+	delete skydome_;
+
+	delete modelplayer_;
+
+	delete player_;
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform*& worldTransformBlock : worldTransformBlockLine) {
 			delete worldTransformBlock;
 		}
 	}
 	worldTransformBlocks_.clear();
+
+	delete mapChipField_;
 }

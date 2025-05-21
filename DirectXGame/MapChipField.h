@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include "KamataEngine.h"
+#include "Math.h"
 
 enum class MapChipType {
 	kBlank, // 空白
@@ -12,25 +13,21 @@ enum class MapChipType {
 struct MapChipData {
 	std::vector<std::vector<MapChipType>> data;
 };
-/*
-struct Vector3 {
-	float x;
-	float y;
-	float z;
-};
-*/
+
 class MapChipField
 {
 public:
 //	// 1ブロックサイズ
 	static inline const float kBlockWidth = 1.0f;
 	static inline const float kBlockHeight = 1.0f;
-//
+	int GetNumBlockViritical() { return kNumBlockVirtical; }
+	int GetNumBlockHorizontal() { return kNumBlockHorizontal; }
+
 	void ResetMapChipData();
 	void LoadMapChipCsv(const std::string& filePath);
-//	MapChipType GetMapChipTypeByIndex(uint32_t xIndex, uint32_t yIndex);
-//    Vector3 GetMapChipPositionByIndex(uint32_t xIndex, uint32_t yIndex);
-//	
+	MapChipType GetMapChipTypeByIndex(uint32_t xIndex, uint32_t yIndex);
+    Vector3 GetMapChipPositionByIndex(uint32_t xIndex, uint32_t yIndex);
+////	
 //
 private:
 //	//ブロック個数

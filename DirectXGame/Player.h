@@ -7,7 +7,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(KamataEngine::Model* model_, uint32_t textureHandle, KamataEngine::Camera* camera_);
+	void Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera);
 
 	/// <summary>
 	/// 更新

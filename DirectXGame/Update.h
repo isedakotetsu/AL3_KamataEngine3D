@@ -6,6 +6,6 @@
 #include "Math.h"
 using namespace KamataEngine;
 
-void WorldTransform(KamataEngine::WorldTransform& worldTransform);
+void WorldTransformUpdate(KamataEngine::WorldTransform& worldTransform);
 
 Math* math_ = nullptr;
