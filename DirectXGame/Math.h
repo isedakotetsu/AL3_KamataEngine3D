@@ -13,6 +13,8 @@ using namespace KamataEngine;
 
 class Math {
 public:
+
+	 float EaseInOut(float start, float end, float t);
 	// 加算
 	Vector3 Add(const Vector3& v1, const Vector3& v2);
 
