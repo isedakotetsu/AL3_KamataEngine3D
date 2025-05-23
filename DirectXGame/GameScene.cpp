@@ -18,9 +18,11 @@ void GameScene::Initialize() {
 	// 自キャラの生成
 	player_ = new Player();
 
-	 modelplayer_ = Model::CreateFromOBJ("player", true);
+	modelplayer_ = Model::CreateFromOBJ("player", true);
+
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 18);
 	// 自キャラの初期化
-	 player_->Initialize(modelplayer_, &camera_);
+	player_->Initialize(modelplayer_, &camera_, playerPosition);
 
 	worldTransform_.Initialize();
 

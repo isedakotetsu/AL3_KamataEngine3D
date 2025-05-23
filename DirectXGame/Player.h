@@ -1,13 +1,14 @@
 #pragma once
 #include "KamataEngine.h"
 #include "Math.h"
+#include "Updatetransform.h"
 
 class Player {
 public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera);
+	void Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera, const Vector3& position);
 
 	/// <summary>
 	/// 更新
@@ -30,8 +31,15 @@ private:
 
 	Math* math_ = nullptr;
 
+	Updatetoransform* updatetransform_ = nullptr;
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
 
 	KamataEngine::Camera* camera_ = nullptr;
+
+	Vector3 velocity_ = {};
+
+	static inline const float kAcceleration = 0.02f;
+
+
 };

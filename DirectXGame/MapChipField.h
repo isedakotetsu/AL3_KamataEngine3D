@@ -4,6 +4,7 @@
 #include <vector>
 #include "KamataEngine.h"
 #include "Math.h"
+#include "Player.h"
 
 enum class MapChipType {
 	kBlank, // 空白
