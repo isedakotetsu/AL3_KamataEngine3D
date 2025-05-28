@@ -3,7 +3,7 @@
 #include <numbers>
 #include <cassert>
 #include <algorithm>
-#include "Math.h"
+//#include "Math.h"
 
 
 using namespace KamataEngine;

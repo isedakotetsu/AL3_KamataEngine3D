@@ -26,6 +26,8 @@ public:
 	/// </summary>
 	void Draw();
 
+	const WorldTransform& GetWorldTransform() const { return worldTransform_; }
+
 private:
 	// ワールド変換データ
 	KamataEngine::WorldTransform worldTransform_;
