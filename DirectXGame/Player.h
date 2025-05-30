@@ -27,6 +27,7 @@ public:
 	void Draw();
 
 	const WorldTransform& GetWorldTransform() const { return worldTransform_; }
+	const KamataEngine::Vector3& GetVelocity() const { return velocity_; }
 
 private:
 	// ワールド変換データ
@@ -37,7 +38,6 @@ private:
 	// モデル
 	KamataEngine::Model* model_ = nullptr;
 
-	Math* math_ = nullptr;
 
 	Updatetoransform* updatetransform_ = nullptr;
 	// テクスチャハンドル
@@ -63,5 +63,7 @@ private:
 	static inline const float kGravityAcceleration = 0.05f;
 	static inline const float kLimitFallSpeed = 0.05f;
 	static inline const float kJumpAcceleration = 0.05f;
+
+
 
 };

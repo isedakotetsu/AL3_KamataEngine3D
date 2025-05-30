@@ -8,5 +8,5 @@ class Updatetoransform {
 public:
 	void WorldTransformUpdate(KamataEngine::WorldTransform& worldTransform);
 
-	Math math_;
+	
 };

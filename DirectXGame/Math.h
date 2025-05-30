@@ -11,8 +11,29 @@
 
 using namespace KamataEngine;
 
-class Math {
-public:
+//class Math {
+//public:
+
+	// 円周率
+	const float PI = 3.141592654f;
+
+	struct AABB {
+		Vector3 min;
+		Vector3 max;
+	};
+
+	const Vector3 operator+(const Vector3& lhv, const Vector3& rhv);
+
+	const Vector3 operator*(const Vector3& v1, const float f);
+
+	Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
+
+
+	// 代入演算子オーバーロード
+	Vector3& operator+=(Vector3& lhs, const Vector3& rhv);
+	Vector3& operator-=(Vector3& lhs, const Vector3& rhv);
+	Vector3& operator*=(Vector3& v, float s);
+	Vector3& operator/=(Vector3& v, float s);
 
 	 float EaseInOut(float start, float end, float t);
 	// 加算
@@ -71,4 +92,17 @@ public:
 
 	// 3次元アフィン変換行列
 	Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
-};
+	
+	float Lerp(float x1, float x2, float t);
+
+	
+
+	// 代入演算子オーバーロード
+	Matrix4x4& operator*=(Matrix4x4& lhm, const Matrix4x4& rhm);
+
+	// 2項演算子オーバーロード
+	Matrix4x4 operator*(const Matrix4x4& m1, const Matrix4x4& m2);
+
+
+//};
+

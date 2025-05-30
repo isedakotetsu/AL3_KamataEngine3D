@@ -18,7 +18,7 @@ void Player::Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = position;
 	worldTransform_.rotation_.y = std::numbers::pi_v<float> / 2.0f;
-	worldTransform_.translation_ = {10.3f, 10.0f, 0.0f};
+	worldTransform_.translation_ = {10.0f, 1.0f, 0.0f};
 
 	worldTransform_.rotation_ = {0.0f, 1.5f, 0.0f};
 	camera_ = camera;
@@ -28,7 +28,7 @@ void Player::UpDate()
 {
 
 	// アフィン変換行列の生成
-	worldTransform_.matWorld_ = math_->MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
+	worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
 
 	// 定数バッファに転送する
 	worldTransform_.TransferMatrix();
@@ -60,7 +60,7 @@ void Player::UpDate()
 					turnTimer_ = kTimeTurn;
 				}
 			}
-			velocity_ = math_->Add(velocity_, acceleration);
+			velocity_ = Add(velocity_, acceleration);
 
 			velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed);
 		} else {
@@ -69,16 +69,16 @@ void Player::UpDate()
 		}
 		if (Input::GetInstance()->PushKey(DIK_UP))
 		{
-			velocity_ = math_->Add(Vector3(0, kJumpAcceleration, 0),velocity_);
+			velocity_ = Add(Vector3(0, kJumpAcceleration, 0),velocity_);
 
 		}
 	} else 
 	{
-		velocity_ = math_->Add(Vector3(0, -kGravityAcceleration / 60, 0), velocity_);
+		velocity_ = Add(Vector3(0, -kGravityAcceleration / 60, 0), velocity_);
 		velocity_.y = std::max(velocity_.y, -kLimitFallSpeed);
 	}
 
-	worldTransform_.translation_ = math_->Add(velocity_, worldTransform_.translation_);
+	worldTransform_.translation_ = Add(velocity_, worldTransform_.translation_);
 	updatetransform_->WorldTransformUpdate(worldTransform_);
 
 
@@ -115,7 +115,7 @@ void Player::UpDate()
 		turnTimer_ = std::max(turnTimer_ - (1.0f / 60.0f), 0.0f);
 		float destinationRotationYTable[] = {std::numbers::pi_v<float> / 2.0f, std::numbers::pi_v<float> * 3.0f / 2.0f};
 		float destinationRotationY = destinationRotationYTable[static_cast<uint32_t>(lrDirection_)];
-		worldTransform_.rotation_.y = math_->EaseInOut(destinationRotationY, turnFirstRotationY_, turnTimer_ / kTimeTurn);
+		worldTransform_.rotation_.y = EaseInOut(destinationRotationY, turnFirstRotationY_, turnTimer_ / kTimeTurn);
 	}
 }
 void Player::Draw() {

@@ -5,6 +5,7 @@
 #include <vector>
 #include "Skydome.h"
 #include "MapChipField.h"
+#include "CameraController.h"
 
 using namespace KamataEngine;
 
@@ -51,7 +52,7 @@ private:
 	// 自キャラ
 	Player* player_ = nullptr;
 
-	Math* math_ = nullptr;
+	
 
 	Model* modelskydome_ = nullptr;
 	Model* modelplayer_ = nullptr;
@@ -60,7 +61,7 @@ private:
 
 	Skydome* skydome_ = nullptr;
 
-	
+	CameraController* CController_ = nullptr;
 
 	// デバッグカメラ有効
 	bool isDebugCameraActive_ = false;

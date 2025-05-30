@@ -43,6 +43,14 @@ void GameScene::Initialize() {
 	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
 
 	GenerateBlocks();
+
+	CController_ = new CameraController();//生成
+	CController_->Initialize(&camera_);//初期化
+	CController_->SetTarget(player_);//追従対象をセット
+	CController_->Reset();//リセット
+
+	CameraController::Rect cameraArea = {12.0f, 100 - 12.0f, 6.0f, 6.0f};
+	CController_->SetMovableArea(cameraArea);//移動範囲の指定
 }
 
 void GameScene::GenerateBlocks() {
@@ -77,13 +85,14 @@ void GameScene::Update() {
 	// 自キャラの更新
 	player_->UpDate();
 	skydome_->Update();
+	CController_->Update();
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform*& worldTransformBlock : worldTransformBlockLine) {
 			if (!worldTransformBlock)
 				continue;
 			// アフィン変換行列の生成
-			worldTransformBlock->matWorld_ = math_->MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+			worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
 
 			// 定数バッファに転送する
 			worldTransformBlock->TransferMatrix();
