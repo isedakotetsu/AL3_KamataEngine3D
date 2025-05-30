@@ -49,7 +49,7 @@ private:
 
 	static inline const float kAcceleration = 0.1f;
 	static inline const float kAttenuation = 0.1f;
-	static inline const float kLimitRunSpeed = 0.1f;
+	static inline const float kLimitRunSpeed = 0.2f;
 
 	LRDirection lrDirection_ = LRDirection::kRight;
 
@@ -60,9 +60,9 @@ private:
 
 	bool onGround_ = true;
 
-	static inline const float kGravityAcceleration = 0.05f;
-	static inline const float kLimitFallSpeed = 0.05f;
-	static inline const float kJumpAcceleration = 0.05f;
+	static inline const float kGravityAcceleration = 0.1f;
+	static inline const float kLimitFallSpeed = 0.1f;
+	static inline const float kJumpAcceleration = 0.1f;
 
 
 
