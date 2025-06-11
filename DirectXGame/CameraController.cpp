@@ -32,7 +32,7 @@ void CameraController::Update()
 	camera_->translation_.y = min(camera_->translation_.y, movableArea_.bottom);
 	camera_->translation_.y = max(camera_->translation_.y, movableArea_.top);
 
-	camera_->UpdateMatrix();
+	
 	//行列の更新
 	camera_->UpdateMatrix();
 
@@ -44,6 +44,6 @@ void CameraController::Reset()
 	//追従対象のワールドトランスフォームを参照
 	const WorldTransform& targetWorldTransform = target_->GetWorldTransform();
 	//追従対象とオフセットからカメラの座標を計算
-	camera_->translation_ = Add( targetWorldTransform.translation_,target0ffset_);
+	camera_->translation_ = targetWorldTransform.translation_ + target0ffset_;
 
 }

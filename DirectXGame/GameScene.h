@@ -33,36 +33,36 @@ private:
 	//////3Dモデル
 	Model* model_ = nullptr;
 
-	// ブロックの3Dモデル
-	Model* blockModel_ = nullptr;
-
 	WorldTransform worldTransform_;
-	//
-	////カメラ
+
+	// カメラ
 	Camera camera_;
-
-	MapChipField* mapChipField_;
-
-	
-
-	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
-
-	DebugCamera* debugCamera_ = nullptr;
 
 	// 自キャラ
 	Player* player_ = nullptr;
 
-	
-
-	Model* modelskydome_ = nullptr;
 	Model* modelplayer_ = nullptr;
-	/*Model* modelblock_ = nullptr;*/
-	
 
-	Skydome* skydome_ = nullptr;
+	// ブロックの3Dモデル
+	Model* blockModel_ = nullptr;
 
-	CameraController* CController_ = nullptr;
+	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
 
 	// デバッグカメラ有効
 	bool isDebugCameraActive_ = false;
+	
+	DebugCamera* debugCamera_ = nullptr;
+
+	Model* modelskydome_ = nullptr;
+
+	/*Model* modelblock_ = nullptr;*/
+
+	Skydome* skydome_ = nullptr;
+
+	MapChipField* mapChipField_;
+
+
+	CameraController* CController_ = nullptr;
+
+	
 };

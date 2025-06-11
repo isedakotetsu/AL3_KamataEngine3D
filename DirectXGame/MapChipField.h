@@ -11,6 +11,8 @@ enum class MapChipType {
 	kBlock, // ブロック
 };
 
+
+
 struct MapChipData {
 	std::vector<std::vector<MapChipType>> data;
 };
@@ -18,6 +20,20 @@ struct MapChipData {
 class MapChipField
 {
 public:
+
+	struct IndexSet
+	{
+		uint32_t xIndex;
+		uint32_t yIndex;
+	};
+
+	struct Rect
+	{
+		float left;
+		float right;
+		float bottom;
+		float top;
+	};
 //	// 1ブロックサイズ
 	static inline const float kBlockWidth = 1.0f;
 	static inline const float kBlockHeight = 1.0f;
@@ -28,8 +44,10 @@ public:
 	void LoadMapChipCsv(const std::string& filePath);
 	MapChipType GetMapChipTypeByIndex(uint32_t xIndex, uint32_t yIndex);
     Vector3 GetMapChipPositionByIndex(uint32_t xIndex, uint32_t yIndex);
-////	
-//
+
+	IndexSet GetMapChipIndexSetByPosition(const Vector3& position);
+	Rect GetRectByIndex(uint32_t xIndex, uint32_t yIndex);
+
 private:
 //	//ブロック個数
 	static inline const uint32_t kNumBlockVirtical = 20;

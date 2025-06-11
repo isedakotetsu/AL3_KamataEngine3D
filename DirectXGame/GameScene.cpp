@@ -11,25 +11,14 @@ void GameScene::Initialize() {
 
 	model_ = Model::Create();
 
-	blockModel_ = Model::CreateFromOBJ("block");
-
-	debugCamera_ = new DebugCamera(1280, 720);
-
-	// 自キャラの生成
-	player_ = new Player();
-
-	modelplayer_ = Model::CreateFromOBJ("player", true);
-
-	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 18);
-	// 自キャラの初期化
-	player_->Initialize(modelplayer_, &camera_, playerPosition);
-
 	worldTransform_.Initialize();
 
 	// カメラの初期化
 	camera_.Initialize();
 
-	camera_.farZ = 1000.0f;
+	blockModel_ = Model::CreateFromOBJ("block");
+
+	debugCamera_ = new DebugCamera(1280, 720);
 
 	// 02_03天球
 	// skydome生成
@@ -38,11 +27,26 @@ void GameScene::Initialize() {
 	modelskydome_ = Model::CreateFromOBJ("skyDome", true);
 	skydome_->Initialize(modelskydome_, &camera_);
 
+
 	mapChipField_ = new MapChipField;
 
 	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
 
 	GenerateBlocks();
+
+	// 自キャラの生成
+	player_ = new Player();
+
+	modelplayer_ = Model::CreateFromOBJ("player", true);
+
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
+
+	player_->SetMapChipField(mapChipField_);
+	// 自キャラの初期化
+	player_->Initialize(modelplayer_, &camera_, playerPosition);
+
+	camera_.farZ = 1000.0f;
+
 
 	CController_ = new CameraController();//生成
 	CController_->Initialize(&camera_);//初期化
@@ -87,17 +91,7 @@ void GameScene::Update() {
 	skydome_->Update();
 	CController_->Update();
 
-	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
-		for (WorldTransform*& worldTransformBlock : worldTransformBlockLine) {
-			if (!worldTransformBlock)
-				continue;
-			// アフィン変換行列の生成
-			worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
-
-			// 定数バッファに転送する
-			worldTransformBlock->TransferMatrix();
-		}
-	}
+	
 
 #ifdef _DEBUG
 	// デバックの時Cキーを押すと状態が反転する
@@ -105,6 +99,7 @@ void GameScene::Update() {
 		isDebugCameraActive_ = !isDebugCameraActive_;
 	}
 #endif // ! _DEBUG
+
 	// カメラの処理
 	if (isDebugCameraActive_) {
 		debugCamera_->Update();
@@ -117,6 +112,20 @@ void GameScene::Update() {
 
 		camera_.UpdateMatrix();
 	}
+
+	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+		for (WorldTransform*& worldTransformBlock : worldTransformBlockLine) {
+			if (!worldTransformBlock)
+				continue;
+			// アフィン変換行列の生成
+			worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+
+			// 定数バッファに転送する
+			worldTransformBlock->TransferMatrix();
+		}
+	}
+	debugCamera_->Update();
+	
 }
 
 void GameScene::Draw() {
