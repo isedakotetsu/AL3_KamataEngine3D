@@ -45,6 +45,17 @@ void GameScene::Initialize() {
 	// 自キャラの初期化
 	player_->Initialize(modelplayer_, &camera_, playerPosition);
 
+
+	enemy_ = new Enemy();
+
+	modelenemy_ = Model::CreateFromOBJ("enemy", true);
+
+	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(10, 18);
+
+	
+	// 自キャラの初期化
+	enemy_->Initialize(modelenemy_, &camera_, enemyPosition);
+
 	camera_.farZ = 1000.0f;
 
 
@@ -88,6 +99,7 @@ void GameScene::Update() {
 
 	// 自キャラの更新
 	player_->UpDate();
+	enemy_->UpDate();
 	skydome_->Update();
 	CController_->Update();
 
@@ -132,6 +144,8 @@ void GameScene::Draw() {
 
 	player_->Draw();
 
+	enemy_->Draw();
+
 	// 天球描画
 	skydome_->Draw();
 
@@ -165,6 +179,10 @@ GameScene::~GameScene() {
 	delete modelplayer_;
 
 	delete player_;
+
+	delete enemy_;
+
+	delete modelenemy_;
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform*& worldTransformBlock : worldTransformBlockLine) {
 			delete worldTransformBlock;
