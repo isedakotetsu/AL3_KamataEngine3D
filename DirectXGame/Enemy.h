@@ -22,4 +22,16 @@ private:
 	Updatetoransform* updatetransform_ = nullptr;
 	KamataEngine::Model* model_ = nullptr;
 	KamataEngine::Camera* camera_ = nullptr;
+	//敵のスピード（移動）
+	static inline const float kWalkSpeed = 0.05f;
+	//最初の角度
+	static inline const float kWalkMotionAngleStart = 0.5f;
+	//最後の角度
+	static inline const float kWalkMotionAngleEnd = 0.5f;
+	//アニメーションの周期となる時間
+	static inline const float kWalkMotionTime = 0.5f;
+
+	float walkTimer_ = 0.0f;
+
+	Vector3 velocity_ = {};
 };
