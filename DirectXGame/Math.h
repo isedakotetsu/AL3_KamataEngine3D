@@ -95,7 +95,7 @@ using namespace KamataEngine;
 	
 	float Lerp(float x1, float x2, float t);
 
-	
+	bool IsCollision(const AABB &aabb1, const AABB &aabb2);
 
 	// 代入演算子オーバーロード
 	Matrix4x4& operator*=(Matrix4x4& lhm, const Matrix4x4& rhm);

@@ -1,5 +1,6 @@
 #include "GameScene.h"
 
+
 using namespace KamataEngine;
 
 void GameScene::Initialize() {
@@ -46,15 +47,19 @@ void GameScene::Initialize() {
 	player_->Initialize(modelplayer_, &camera_, playerPosition);
 
 
-	enemy_ = new Enemy();
+	
 
 	modelenemy_ = Model::CreateFromOBJ("enemy", true);
 
-	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(10, 18);
+	for (int32_t i = 0; i < 3; ++i) {
+		Enemy* newEnemy = new Enemy();
+		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(18 + i * 2, 18);
+		// 自キャラの初期化
+		newEnemy->Initialize(modelenemy_, &camera_, enemyPosition);
 
-	
-	// 自キャラの初期化
-	enemy_->Initialize(modelenemy_, &camera_, enemyPosition);
+		enemies_.push_back(newEnemy);
+	}
+
 
 	camera_.farZ = 1000.0f;
 
@@ -93,16 +98,40 @@ void GameScene::GenerateBlocks() {
 		}
 	}
 }
+void GameScene::CheckAllCollisions() 
+{
+	#pragma region
+	AABB aabb1, aabb2;
+
+	aabb1 = player_->GetAABB();
+
+	for (Enemy* enemy : enemies_)
+	{
+		aabb2 = enemy->GetAABB();
+
+		if (IsCollision(aabb1, aabb2))
+		{
+			//自キャラのしょうとつ時コールバックを呼び出す
+			player_->OnCollision(enemy);
+			//敵弾の衝突時コールバックを呼び出す
+			enemy->OnCollision(player_);
+		}
+	}
+
+	#pragma endregion
+}
 
 void GameScene::Update() {
 	// ここにインゲームの更新処理を書
 
 	// 自キャラの更新
 	player_->UpDate();
-	enemy_->UpDate();
+	for (Enemy* enemy : enemies_) {
+		enemy->UpDate();
+	}
 	skydome_->Update();
 	CController_->Update();
-
+	
 	
 
 #ifdef _DEBUG
@@ -137,6 +166,8 @@ void GameScene::Update() {
 		}
 	}
 	debugCamera_->Update();
+
+	CheckAllCollisions();
 	
 }
 
@@ -144,7 +175,9 @@ void GameScene::Draw() {
 
 	player_->Draw();
 
-	enemy_->Draw();
+	for (Enemy* enemy : enemies_) {
+		enemy->Draw();
+	}
 
 	// 天球描画
 	skydome_->Draw();
@@ -180,7 +213,9 @@ GameScene::~GameScene() {
 
 	delete player_;
 
-	delete enemy_;
+	for (Enemy* enemy : enemies_) {
+		delete enemy;
+	}
 
 	delete modelenemy_;
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {

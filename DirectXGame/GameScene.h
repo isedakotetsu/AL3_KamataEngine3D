@@ -1,12 +1,12 @@
 #pragma once
 #include "KamataEngine.h"
-#include "Math.h"
 #include "Player.h"
 #include "Enemy.h"
 #include <vector>
 #include "Skydome.h"
 #include "MapChipField.h"
 #include "CameraController.h"
+#include "Math.h"
 
 using namespace KamataEngine;
 
@@ -25,6 +25,8 @@ public:
 	~GameScene();
 	void GenerateBlocks();
 
+	void CheckAllCollisions();
+
 private:
 	////テクスチャーハンドル
 	uint32_t textureHandle_ = 0;
@@ -42,7 +44,7 @@ private:
 	// 自キャラ
 	Player* player_ = nullptr;
 	//敵
-	Enemy* enemy_ = nullptr;
+	std::list<Enemy*> enemies_;
 	// 自キャラモデル
 	Model* modelplayer_ = nullptr;
 	//敵モデル

@@ -78,6 +78,13 @@ void Player::InputMove() {
 	}
 }
 
+void Player::OnCollision(const Enemy* enemy) 
+{ 
+	(void)enemy;
+	//ジャンプの開始（仮処理)
+    velocity_ += Vector3(0, kJumpAcceleration / 60.0f, 0);
+}
+
 void Player::CheckMapCollision(CollisionMapInfo& info) 
 {
 	CheckMapCollisionUp(info); 
@@ -347,11 +354,34 @@ Vector3 Player::CornerPosition(const Vector3& center, Corner corner) {
 	return center + offsetTable[static_cast<uint32_t>(corner)];
 }
 
+Vector3 Player::GetWorldPosition() 
+{ 
+	Vector3 worldPos;
+
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
+
+	return worldPos;
+
+}
+
+AABB Player::GetAABB() 
+{ 
+	Vector3 worldPos = GetWorldPosition();
+	AABB aabb;
+
+    aabb.min = {worldPos.x - kWidth / 2.0f, worldPos.y - kHeight / 2.0f, worldPos.z - kWidth / 2.0f};
+	aabb.max = {worldPos.x + kWidth / 2.0f, worldPos.y + kHeight / 2.0f, worldPos.z + kWidth / 2.0f};
+	return aabb;
+}
+
 void Player ::UpDate() {
 
 	// 移動入力(02_07 スライド10枚目)
 	InputMove();
-
+	
+	
 	// 衝突情報を初期化(02_07 スライド13枚目)
 	CollisionMapInfo collisionMapInfo = {};
 	collisionMapInfo.move = velocity_;

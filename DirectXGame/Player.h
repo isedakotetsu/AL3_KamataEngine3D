@@ -3,6 +3,7 @@
 #include "Math.h"
 #include "Updatetransform.h"
 class MapChipField;
+class Enemy;
 class Player {
 public:
 	enum class LRDirection {
@@ -37,9 +38,12 @@ public:
 	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
 
 	void InputMove();
+	//衝突応答
+	void OnCollision(const Enemy* enemy);
 
 	const WorldTransform& GetWorldTransform() const { return worldTransform_; }
 	const KamataEngine::Vector3& GetVelocity() const { return velocity_; }
+	AABB GetAABB();
 
 private:
 	// ワールド変換データ
@@ -103,4 +107,8 @@ private:
 	
 
 	Vector3 CornerPosition(const Vector3& center, Corner corner);
+
+	Vector3 GetWorldPosition();
+
+	
 };
