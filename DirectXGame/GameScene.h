@@ -7,6 +7,7 @@
 #include "MapChipField.h"
 #include "CameraController.h"
 #include "Math.h"
+#include "DeathParticles.h"
 
 using namespace KamataEngine;
 
@@ -50,6 +51,8 @@ private:
 	//敵モデル
 	Model* modelenemy_ = nullptr;
 
+	Model* deathParticle_model_ = nullptr;
+
 	// ブロックの3Dモデル
 	Model* blockModel_ = nullptr;
 
@@ -70,6 +73,8 @@ private:
 
 
 	CameraController* CController_ = nullptr;
+
+	DeathParticles* deathParticles_ = nullptr;
 
 	
 };

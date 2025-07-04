@@ -71,6 +71,10 @@ void GameScene::Initialize() {
 
 	CameraController::Rect cameraArea = {12.0f, 100 - 12.0f, 6.0f, 6.0f};
 	CController_->SetMovableArea(cameraArea);//移動範囲の指定
+
+	deathParticle_model_ = Model::CreateFromOBJ("deathParticle");
+	deathParticles_ = new DeathParticles;
+	deathParticles_->Initialize(deathParticle_model_, &camera_, playerPosition);
 }
 
 void GameScene::GenerateBlocks() {
@@ -129,6 +133,10 @@ void GameScene::Update() {
 	for (Enemy* enemy : enemies_) {
 		enemy->UpDate();
 	}
+
+	if (deathParticles_) {
+		deathParticles_->Update();
+	}
 	skydome_->Update();
 	CController_->Update();
 	
@@ -179,6 +187,10 @@ void GameScene::Draw() {
 		enemy->Draw();
 	}
 
+	if (deathParticles_) 
+	{
+		deathParticles_->Draw();
+	}
 	// 天球描画
 	skydome_->Draw();
 
@@ -212,6 +224,8 @@ GameScene::~GameScene() {
 	delete modelplayer_;
 
 	delete player_;
+
+	delete deathParticle_model_;
 
 	for (Enemy* enemy : enemies_) {
 		delete enemy;
