@@ -14,6 +14,10 @@ public:
 
 	void Draw();
 
+	bool isFinished_ = false;
+
+	bool IsFnished() const { return isFinished_; }
+
 private:
 	Updatetoransform* updatetransform_ = nullptr;
 	KamataEngine::Model* model_ = nullptr;
@@ -28,7 +32,7 @@ private:
 
 	static inline const float kAngleUnit_ = 2.0f * std::numbers::pi_v<float> / kNumParticles;
 
-	bool isFinished_ = false;
+	
 
 	float counter_ = 0.0f;
 

@@ -14,6 +14,7 @@ void GameScene::Initialize() {
 
 	worldTransform_.Initialize();
 
+	phase_ = Phase::kPlay;
 	// カメラの初期化
 	camera_.Initialize();
 
@@ -27,6 +28,9 @@ void GameScene::Initialize() {
 	// 初期化
 	modelskydome_ = Model::CreateFromOBJ("skyDome", true);
 	skydome_->Initialize(modelskydome_, &camera_);
+
+	
+
 
 
 	mapChipField_ = new MapChipField;
@@ -73,8 +77,7 @@ void GameScene::Initialize() {
 	CController_->SetMovableArea(cameraArea);//移動範囲の指定
 
 	deathParticle_model_ = Model::CreateFromOBJ("deathParticle");
-	deathParticles_ = new DeathParticles;
-	deathParticles_->Initialize(deathParticle_model_, &camera_, playerPosition);
+	
 }
 
 void GameScene::GenerateBlocks() {
@@ -125,8 +128,46 @@ void GameScene::CheckAllCollisions()
 	#pragma endregion
 }
 
-void GameScene::Update() {
-	// ここにインゲームの更新処理を書
+void GameScene::ChagePhase()
+{
+	switch (phase_)
+	{ 
+		case Phase::kPlay:
+		
+		if (player_->IsDead()) {
+			// 死亡演出
+			phase_ = Phase::kDeath;
+
+			const Vector3& deathParticlesPosition = player_->GetWorldPosition();
+
+			deathParticles_ = new DeathParticles;
+			deathParticles_->Initialize(deathParticle_model_, &camera_, deathParticlesPosition);
+			
+		}
+
+		    break;
+	    case Phase::kDeath:
+
+		    break;
+	}
+
+}
+
+void GameScene::Update()
+{
+	ChagePhase();
+	switch (phase_)
+	{ 
+		case Phase::kPlay:
+		break;
+	    case Phase::kDeath:
+			if (deathParticles_ && deathParticles_->IsFnished())
+			{
+			    finished_ = true;
+			}
+		    break;
+
+	}
 
 	// 自キャラの更新
 	player_->UpDate();
@@ -181,7 +222,8 @@ void GameScene::Update() {
 
 void GameScene::Draw() {
 
-	player_->Draw();
+	if (!player_->IsDead())
+		player_->Draw();
 
 	for (Enemy* enemy : enemies_) {
 		enemy->Draw();
@@ -226,6 +268,8 @@ GameScene::~GameScene() {
 	delete player_;
 
 	delete deathParticle_model_;
+
+	
 
 	for (Enemy* enemy : enemies_) {
 		delete enemy;

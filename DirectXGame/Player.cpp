@@ -82,7 +82,9 @@ void Player::OnCollision(const Enemy* enemy)
 { 
 	(void)enemy;
 	//ジャンプの開始（仮処理)
-    velocity_ += Vector3(0, kJumpAcceleration / 60.0f, 0);
+   // velocity_ += Vector3(0, kJumpAcceleration / 60.0f, 0);
+
+	isDead_ = true;
 }
 
 void Player::CheckMapCollision(CollisionMapInfo& info) 

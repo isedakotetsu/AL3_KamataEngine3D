@@ -45,6 +45,13 @@ public:
 	const KamataEngine::Vector3& GetVelocity() const { return velocity_; }
 	AABB GetAABB();
 
+	Vector3 GetWorldPosition();
+
+	// ですフラグ
+	bool isDead_ = false;
+	// デスフラグのgetter
+	bool IsDead() const { return isDead_; }
+
 private:
 	// ワールド変換データ
 	KamataEngine::WorldTransform worldTransform_;
@@ -108,7 +115,8 @@ private:
 
 	Vector3 CornerPosition(const Vector3& center, Corner corner);
 
-	Vector3 GetWorldPosition();
+	
+	
 
 	
 };

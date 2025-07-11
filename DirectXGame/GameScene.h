@@ -8,8 +8,15 @@
 #include "CameraController.h"
 #include "Math.h"
 #include "DeathParticles.h"
+#include "TitleScene.h"
 
 using namespace KamataEngine;
+enum class Phase
+{
+	kPlay,//ゲームプレイ
+	kDeath,//デス演出
+};
+
 
 // ゲームシーン
 class GameScene {
@@ -27,10 +34,18 @@ public:
 	void GenerateBlocks();
 
 	void CheckAllCollisions();
+	void ChagePhase();
+
+	bool finished_ = false;
+
+	bool IsFnished() const { return finished_; }
 
 private:
 	////テクスチャーハンドル
 	uint32_t textureHandle_ = 0;
+
+	
+	Phase phase_;
 
 	Sprite* sprite_ = nullptr;
 
@@ -53,6 +68,7 @@ private:
 
 	Model* deathParticle_model_ = nullptr;
 
+	
 	// ブロックの3Dモデル
 	Model* blockModel_ = nullptr;
 
@@ -75,6 +91,8 @@ private:
 	CameraController* CController_ = nullptr;
 
 	DeathParticles* deathParticles_ = nullptr;
+
+	
 
 	
 };
