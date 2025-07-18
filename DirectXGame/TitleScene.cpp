@@ -1,16 +1,19 @@
 #include "TitleScene.h"
-#include <numbers>
 #include "Math.h"
+#include <numbers>
 
 TitleScene::~TitleScene() {
 	delete modelPlayer_;
 	delete modelTitle_;
+	delete fade_;
 }
 
-void TitleScene::Initialize() 
-{
-	
-	
+void TitleScene::Initialize() {
+
+	fade_ = new Fade();
+	fade_->Initialize();
+	fade_->Start(Fade::Status::FadeIn, 1.0f);
+
 	modelTitle_ = Model::CreateFromOBJ("titleFont", true);
 	modelPlayer_ = Model::CreateFromOBJ("player");
 
@@ -37,10 +40,29 @@ void TitleScene::Initialize()
 }
 
 void TitleScene::Update() {
+	fade_->Update();
 
 	// 02_12 27枚目
-	if (Input::GetInstance()->PushKey(DIK_SPACE)) {
-		finished_ = true;
+	switch (phase_) {
+	case Phase::kFadeIn:
+		fade_->Update();
+
+		if (fade_->IsFinished()) {
+			phase_ = Phase::kMain;
+		}
+		break;
+	case Phase::kMain:
+		if (Input::GetInstance()->PushKey(DIK_SPACE)) {
+			phase_ = Phase::kFadeOut;
+			fade_->Start(Fade::Status::FadeOut, 1.0f);
+		}
+		break;
+	case Phase::kFadeOut:
+		fade_->Update();
+		if (fade_->IsFinished()) {
+			finished_ = true;
+		}
+		break;
 	}
 
 	counter_ += 1.0f / 60.0f;
@@ -59,10 +81,8 @@ void TitleScene::Update() {
 	updatetransform_->WorldTransformUpdate(worldTransformPlayer_);
 }
 
+void TitleScene::Draw() {
 
-
-void TitleScene::Draw() 
-{
 	DirectXCommon* dxCommon_ = DirectXCommon::GetInstance();
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
@@ -71,6 +91,7 @@ void TitleScene::Draw()
 
 	modelTitle_->Draw(worldTransformTitle_, camera_);
 	modelPlayer_->Draw(worldTransformPlayer_, camera_);
+	fade_->Draw();
 
 	Model::PostDraw();
 }

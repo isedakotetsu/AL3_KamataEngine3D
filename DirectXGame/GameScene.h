@@ -9,13 +9,10 @@
 #include "Math.h"
 #include "DeathParticles.h"
 #include "TitleScene.h"
+#include "Fade.h"
 
 using namespace KamataEngine;
-enum class Phase
-{
-	kPlay,//ゲームプレイ
-	kDeath,//デス演出
-};
+
 
 
 // ゲームシーン
@@ -36,15 +33,23 @@ public:
 	void CheckAllCollisions();
 	void ChagePhase();
 
-	bool finished_ = false;
+
 
 	bool IsFnished() const { return finished_; }
 
 private:
+	enum class Phase {
+		kFadeIn,
+		kPlay,  // ゲームプレイ
+		kDeath, // デス演出
+		kFadeOut,
+	};
+
+	bool finished_ = false;
 	////テクスチャーハンドル
 	uint32_t textureHandle_ = 0;
 
-	
+	Fade* fade_ = nullptr;
 	Phase phase_;
 
 	Sprite* sprite_ = nullptr;
@@ -93,6 +98,6 @@ private:
 	DeathParticles* deathParticles_ = nullptr;
 
 	
-
+	
 	
 };

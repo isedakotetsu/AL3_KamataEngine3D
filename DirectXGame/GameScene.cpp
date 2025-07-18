@@ -14,7 +14,7 @@ void GameScene::Initialize() {
 
 	worldTransform_.Initialize();
 
-	phase_ = Phase::kPlay;
+	
 	// カメラの初期化
 	camera_.Initialize();
 
@@ -77,6 +77,10 @@ void GameScene::Initialize() {
 	CController_->SetMovableArea(cameraArea);//移動範囲の指定
 
 	deathParticle_model_ = Model::CreateFromOBJ("deathParticle");
+	phase_ = Phase::kFadeIn;
+	fade_ = new Fade();
+	fade_->Initialize();
+	fade_->Start(Fade::Status::FadeIn, 1.0f);
 	
 }
 
@@ -155,69 +159,138 @@ void GameScene::ChagePhase()
 
 void GameScene::Update()
 {
+	
 	ChagePhase();
 	switch (phase_)
 	{ 
+		case Phase::kFadeIn:
+		fade_->Update();
+		if (fade_->IsFinished()) 
+		{
+			fade_->Start(Fade::Status::FadeOut, 1.0f);
+			phase_ = Phase::kPlay;
+		}
+
+		skydome_->Update();
+		CController_->Update();
+
+		player_->UpDate();
+
+		for (Enemy* enemy : enemies_) {
+			enemy->UpDate();
+		}
+		 
+#ifdef _DEBUG
+		// デバックの時Cキーを押すと状態が反転する
+		if (Input::GetInstance()->TriggerKey(DIK_C)) {
+			isDebugCameraActive_ = !isDebugCameraActive_;
+		}
+#endif 
+
+		// カメラの処理
+		if (isDebugCameraActive_) {
+			debugCamera_->Update();
+			camera_.matView = debugCamera_->GetCamera().matView;
+			camera_.matProjection = debugCamera_->GetCamera().matProjection;
+			// ビュープロジェクション行列の転送AL3_02_02*/
+			camera_.TransferMatrix();
+		} else {
+			// ビュープロジェクション行列の更新と転送AL3_02_02*/
+
+			camera_.UpdateMatrix();
+		}
+
+		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+			for (WorldTransform*& worldTransformBlock : worldTransformBlockLine) {
+				if (!worldTransformBlock)
+					continue;
+				// アフィン変換行列の生成
+				worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+
+				// 定数バッファに転送する
+				worldTransformBlock->TransferMatrix();
+			}
+		}
+		break;
 		case Phase::kPlay:
+
+			skydome_->Update();
+		    CController_->Update();
+		    player_->UpDate();
+
+
+		    for (Enemy* enemy : enemies_) {
+			    enemy->UpDate();
+		    }
+
+	#ifdef _DEBUG
+		    if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
+			    // フラグをトグル
+			    isDebugCameraActive_ = !isDebugCameraActive_;
+		    }
+#endif
+
+		    // カメラの処理
+		    if (isDebugCameraActive_) {
+			    debugCamera_->Update();
+			    camera_.matView = debugCamera_->GetCamera().matView;
+			    camera_.matProjection = debugCamera_->GetCamera().matProjection;
+			    // ビュープロジェクション行列の転送
+			    camera_.TransferMatrix();
+		    } else {
+			    // ビュープロジェクション行列の更新と転送
+			    camera_.UpdateMatrix();
+		    }
+		    for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+			    for (WorldTransform*& worldTransformBlock : worldTransformBlockLine) {
+				    if (!worldTransformBlock)
+					    continue;
+				    // アフィン変換行列の生成
+				    worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+
+				    // 定数バッファに転送する
+				    worldTransformBlock->TransferMatrix();
+			    }
+		    }
+		    CheckAllCollisions();
 		break;
 	    case Phase::kDeath:
+		   
 			if (deathParticles_ && deathParticles_->IsFnished())
 			{
-			    finished_ = true;
+			    phase_ = Phase::kFadeOut;
 			}
+
+			skydome_->Update();
+		    CController_->Update();
+
+			for (Enemy* enemy : enemies_) {
+			    enemy->UpDate();
+		    }
+
+		    if (deathParticles_) {
+			    deathParticles_->Update();
+		    }
+
+		    break;
+	    case Phase::kFadeOut:
+		    fade_->Update();
+		    if (fade_->IsFinished()) {
+			    finished_ = true;
+		    }
+
+		    skydome_->Update();
+		    CController_->Update();
+		  
+		    for (Enemy* enemy : enemies_) {
+			    enemy->UpDate();
+		    }
+
 		    break;
 
 	}
 
-	// 自キャラの更新
-	player_->UpDate();
-	for (Enemy* enemy : enemies_) {
-		enemy->UpDate();
-	}
 
-	if (deathParticles_) {
-		deathParticles_->Update();
-	}
-	skydome_->Update();
-	CController_->Update();
-	
-	
-
-#ifdef _DEBUG
-	// デバックの時Cキーを押すと状態が反転する
-	if (Input::GetInstance()->TriggerKey(DIK_C)) {
-		isDebugCameraActive_ = !isDebugCameraActive_;
-	}
-#endif // ! _DEBUG
-
-	// カメラの処理
-	if (isDebugCameraActive_) {
-		debugCamera_->Update();
-		camera_.matView = debugCamera_->GetCamera().matView;
-		camera_.matProjection = debugCamera_->GetCamera().matProjection;
-		// ビュープロジェクション行列の転送AL3_02_02*/
-		camera_.TransferMatrix();
-	} else {
-		// ビュープロジェクション行列の更新と転送AL3_02_02*/
-
-		camera_.UpdateMatrix();
-	}
-
-	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
-		for (WorldTransform*& worldTransformBlock : worldTransformBlockLine) {
-			if (!worldTransformBlock)
-				continue;
-			// アフィン変換行列の生成
-			worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
-
-			// 定数バッファに転送する
-			worldTransformBlock->TransferMatrix();
-		}
-	}
-	debugCamera_->Update();
-
-	CheckAllCollisions();
-	
 }
 
 void GameScene::Draw() {
@@ -247,10 +320,11 @@ void GameScene::Draw() {
 			blockModel_->Draw(*worldTransformBlock, camera_);
 		}
 	}
-
+	Model::PostDraw();
 	// modelPlayer_->Draw(*worldTransformBlock, camera_);
 
-	Model::PostDraw();
+	
+	fade_->Draw();
 }
 
 GameScene::~GameScene() {
