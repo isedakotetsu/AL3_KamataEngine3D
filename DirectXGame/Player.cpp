@@ -21,6 +21,14 @@ void Player::Initialize(Model* model, Camera* camera, const Vector3& position) {
 	camera_ = camera;
 }
 
+void Player::BehaviorAttackInitialize() 
+{
+	attackParameter_ = 0; 
+}
+void Player::BehaviorRootInitialize() 
+{
+
+}
 
 void Player::InputMove() {
 
@@ -78,6 +86,7 @@ void Player::InputMove() {
 	}
 }
 
+
 void Player::OnCollision(const Enemy* enemy) 
 { 
 	(void)enemy;
@@ -86,6 +95,7 @@ void Player::OnCollision(const Enemy* enemy)
 
 	isDead_ = true;
 }
+
 
 void Player::CheckMapCollision(CollisionMapInfo& info) 
 {
@@ -377,23 +387,19 @@ AABB Player::GetAABB()
 	aabb.max = {worldPos.x + kWidth / 2.0f, worldPos.y + kHeight / 2.0f, worldPos.z + kWidth / 2.0f};
 	return aabb;
 }
-
-void Player ::UpDate() {
-
+void Player::BehaviorRootUpdate() {
 	// 移動入力(02_07 スライド10枚目)
 	InputMove();
-	
-	
+
 	// 衝突情報を初期化(02_07 スライド13枚目)
 	CollisionMapInfo collisionMapInfo = {};
 	collisionMapInfo.move = velocity_;
-	//	collisionMapInfo.landing = false;
-	//	collisionMapInfo.hitWall = false;
+	collisionMapInfo.landing = false;
+	collisionMapInfo.hitWall = false;
 
 	// マップ衝突チェック(02_07 スライド13枚目)
 	CheckMapCollision(collisionMapInfo);
 
-	
 	//	worldTransform_.translation_ += velocity_;
 	// 移動(02_07 スライド36枚目)
 	worldTransform_.translation_ += collisionMapInfo.move;
@@ -403,39 +409,10 @@ void Player ::UpDate() {
 		velocity_.y = 0;
 	}
 
-	
-
-	/*bool landing = false;*/
-
-	// 下降あり？
-	//if (velocity_.y < 0) {
-	//	// Y座標が地面以下になったら着地
-	//	if (worldTransform_.translation_.y <= 1.0f) {
-	//		landing = true;
-	//	}
-	//}
-
-	//// 接地判定
-	//if (onGround_) {
-	//	// ジャンプ開始
-	//	if (velocity_.y > 0.0f) {
-	//		onGround_ = false;
-	//	}
-	//} else {
-	//	// 着地
-	//	if (landing) {
-	//		worldTransform_.translation_.y = 1.0f;
-	//		velocity_.x *= (1.0f - kAttenuation);
-	//		velocity_.y = 0.0f;
-	//		onGround_ = true;
-	//	}
-	//}
-	
 	// 壁に接触している場合の処理
 	UpdateOnWall(collisionMapInfo);
 	//  接地判定
 	UpdateOnGround(collisionMapInfo);
-	
 
 	// 旋回制御
 	if (turnTimer_ > 0.0f) {
@@ -449,8 +426,59 @@ void Player ::UpDate() {
 		worldTransform_.rotation_.y = EaseInOut(destinationRotationY, turnFirstRotationY_, turnTimer_ / kTimeTurn);
 	}
 
+	if (Input::GetInstance()->TriggerKey(DIK_E)) {
+
+		behaviorRequest_ = Behavior::kAttack;
+	}
+
+	
+}
+
+void Player::BehaviorAttackUpdate() {
+	attackParameter_++;
+
+	if (attackParameter_ >= 20.0f) {
+		behaviorRequest_ = Behavior::kRoot;
+	}
+}
+
+void Player ::UpDate() 
+{ 
+	
+	if (behaviorRequest_ != Behavior::kUnknown) {
+		// 振るまいを変更する
+		behavior_ = behaviorRequest_;
+
+		// 各振るまいごとの初期化を実行
+		switch (behavior_) {
+		case Behavior::kRoot:
+		default:
+			BehaviorRootInitialize();
+			
+			break;
+		case Behavior::kAttack:
+			BehaviorAttackInitialize();
+			
+			break;
+		}
+
+		behaviorRequest_ = Behavior::kUnknown;
+	}
+
+	switch (behavior_) {
+	case Behavior::kRoot:
+	default:
+		BehaviorRootUpdate();
+		break;
+	case Behavior::kAttack:
+		BehaviorAttackUpdate();
+		break;
+	}
+	
 	// ワールド行列更新（アフィン変換～DirectXに転送）
 	updatetransform_->WorldTransformUpdate(worldTransform_);
+	//updatetransform_->WorldTransformUpdate(worldTransformAttack_);
+
 }
 
 void Player::Draw() {

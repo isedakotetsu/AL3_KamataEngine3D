@@ -6,6 +6,12 @@ class MapChipField;
 class Enemy;
 class Player {
 public:
+	enum class Behavior
+	{
+		kUnknown = -1, 
+		kRoot,
+		kAttack,
+	};
 	enum class LRDirection {
 		kRight,
 		kLeft,
@@ -38,8 +44,14 @@ public:
 	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
 
 	void InputMove();
+
+	void BehaviorRootUpdate();
+	void BehaviorAttackUpdate();
 	//衝突応答
 	void OnCollision(const Enemy* enemy);
+
+	void BehaviorRootInitialize();
+	void BehaviorAttackInitialize();
 
 	const WorldTransform& GetWorldTransform() const { return worldTransform_; }
 	const KamataEngine::Vector3& GetVelocity() const { return velocity_; }
@@ -53,6 +65,9 @@ public:
 	bool IsDead() const { return isDead_; }
 
 private:
+
+	Behavior behavior_ = Behavior::kRoot;
+	Behavior behaviorRequest_ = Behavior::kUnknown;
 	// ワールド変換データ
 	KamataEngine::WorldTransform worldTransform_;
 
@@ -64,6 +79,7 @@ private:
 	Updatetoransform* updatetransform_ = nullptr;
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
+	uint32_t attackParameter_ = 0;
 
 	KamataEngine::Camera* camera_ = nullptr;
 

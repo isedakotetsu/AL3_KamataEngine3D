@@ -117,7 +117,7 @@ void GameScene::CheckAllCollisions()
 	aabb1 = player_->GetAABB();
 
 	for (Enemy* enemy : enemies_)
-	{
+	{																											
 		aabb2 = enemy->GetAABB();
 
 		if (IsCollision(aabb1, aabb2))
