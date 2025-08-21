@@ -6,6 +6,11 @@ class Player;
 class Enemy
 {
 public:
+	enum class Behavior {
+		kUnknown = -1, // 無効な状態
+		kWalk,         // 歩行状態
+		kDefeated,     // やられ状態
+	};
 	void Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera, const Vector3& position);
 
 	/// <summary>
@@ -21,6 +26,11 @@ public:
 	AABB GetAABB();
 
 	void OnCollision(const Player* player);
+
+	
+	bool IsDead() const { return isDead_; }
+
+	bool IsCollisionDisabled() const { return isCollisionDisabled_; }
 
 private:
 	KamataEngine::WorldTransform worldTransform_;
@@ -44,4 +54,15 @@ private:
 	Vector3 velocity_ = {};
 
 	Vector3 GetWorldPosition();
+	bool isDead_ = false;
+
+	Behavior behavior_ = Behavior::kWalk;
+	Behavior behaviorRequest_ = Behavior::kUnknown;
+
+	static inline const float kDefeatedTime = 0.6f;
+	static inline const float kDefeatedMotionAngleStart = 0.0f;
+	static inline const float kDefeatedMotionAngleEnd = -60.0f;
+	float counter_ = 0.0f; // カウンター
+
+	bool isCollisionDisabled_ = false;
 };

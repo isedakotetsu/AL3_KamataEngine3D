@@ -73,6 +73,8 @@ public:
 	// デスフラグのgetter
 	bool IsDead() const { return isDead_; }
 
+	bool IsAttack() const { return behavior_ == Behavior::kAttack && attackPhase_ == AttackPhase::kAction; }
+
 private:
 
 	Behavior behavior_ = Behavior::kRoot;

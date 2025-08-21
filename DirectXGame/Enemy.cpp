@@ -20,17 +20,54 @@ void Enemy::Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera,
 void Enemy::UpDate() 
 {
 
+	if (behaviorRequest_ != Behavior::kUnknown) {
+		// 振るまいを変更する
+		behavior_ = behaviorRequest_;
 
-	walkTimer_ += 1.0f / 60.0f;
-	//回転アニメーション
-	
-	worldTransform_.rotation_.x = std::sin(std::numbers::pi_v<float> * 2.0f * walkTimer_ / kWalkMotionTime);
-	/*float param = std::sin(std::numbers::pi_v<float> * 2.0f * walkTimer_ / kWalkMotionTime);
-	float degree = kWalkMotionAngleStart + kWalkMotionAngleEnd * (param + 1.0f) / 2.0f;
-	worldTransform_.rotation_.x = ;*/
-	worldTransform_.translation_ += velocity_;
-	// ワールド行列更新（アフィン変換～DirectXに転送）
-	updatetransform_->WorldTransformUpdate(worldTransform_);
+		// 各振るまいごとの初期化を実行
+		switch (behavior_) {
+		case Behavior::kDefeated:
+		default:
+			counter_ = 0;
+			break;
+		}
+
+		// 振るまいリクエストをリセット
+		behaviorRequest_ = Behavior::kUnknown;
+	}
+
+	// 02_15 13枚目
+	switch (behavior_) {
+	// 歩行
+	case Behavior::kWalk:
+		// 02_09 16枚目 移動
+		worldTransform_.translation_ += velocity_;
+
+		// 02_09 20枚目
+		walkTimer_ += 1.0f / 60.0f;
+
+		// 02_09 23枚目 回転アニメーション
+		worldTransform_.rotation_.x = std::sin(std::numbers::pi_v<float> * 2.0f * walkTimer_ / kWalkMotionTime);
+
+		// 02_09 スライド8枚目 ワールド行列更新
+		updatetransform_->WorldTransformUpdate(worldTransform_);
+		break;
+	// やられ
+	case Behavior::kDefeated:
+		// 02_15 15枚目
+		counter_ += 1.0f / 60.0f;
+
+		worldTransform_.rotation_.y += 0.3f;
+		worldTransform_.rotation_.x = EaseOut(kDefeatedMotionAngleStart, kDefeatedMotionAngleEnd, counter_ / kDefeatedTime);
+
+		updatetransform_->WorldTransformUpdate(worldTransform_);
+
+		if (counter_ >= kDefeatedTime) {
+			isDead_ = true;
+		}
+		break;
+	}
+
 }
 
 void Enemy::Draw() 
@@ -66,7 +103,22 @@ AABB Enemy::GetAABB()
 
 void Enemy::OnCollision(const Player* player) 
 { 
+	
 	(void)player; 
 
+	if (behavior_ == Behavior::kDefeated) {
+		// 敵がやられているなら何もしない
+		return;
+	}
+
+	// プレイヤーが攻撃中なら敵が死ぬ
+	// player.hをインクルード
+	if (player->IsAttack()) {
+		// 敵の振るまいをやられに変更
+		behaviorRequest_ = Behavior::kDefeated;
+
+		// 02_15 20枚目 衝突を無効化
+		isCollisionDisabled_ = true;
+	}
 }
 
