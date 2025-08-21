@@ -24,6 +24,11 @@ void Player::Initialize(Model* model, Camera* camera, const Vector3& position) {
 void Player::BehaviorAttackInitialize() 
 {
 	attackParameter_ = 0; 
+
+	velocity_ = {};
+
+	// 溜めフェーズから始める
+	attackPhase_ = AttackPhase::kAnticipation;
 }
 void Player::BehaviorRootInitialize() 
 {
@@ -435,11 +440,7 @@ void Player::BehaviorRootUpdate() {
 
 void Player::BehaviorAttackUpdate() 
 {
-	/*attackParameter_++;
-
-	if (attackParameter_ >= 20.0f) {
-		behaviorRequest_ = Behavior::kRoot;
-	}*/
+	
 
 	
 	const Vector3 attackVelocity = {0.8f, 0.0f, 0.0f};
