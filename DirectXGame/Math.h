@@ -36,6 +36,9 @@ using namespace KamataEngine;
 	Vector3& operator/=(Vector3& v, float s);
 
 	 float EaseInOut(float start, float end, float t);
+    float EaseIn(float x1, float x2, float t);
+     float EaseOut(float x1, float x2, float t);
+
 	// 加算
 	Vector3 Add(const Vector3& v1, const Vector3& v2);
 

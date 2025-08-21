@@ -67,6 +67,20 @@ float EaseInOut(float start, float end, float t) {
 	t = t * t * (3.0f - 2.0f * t); // スムーズステップ
 	return start + (end - start) * t;
 }
+float EaseIn(float x1, float x2, float t)
+{
+	float easedT = t * t;
+
+	return Lerp(x1, x2, easedT);
+
+}
+float EaseOut(float x1, float x2, float t) 
+{
+	float easedT = 1.0f - std::powf(1.0f - t, 3.0f);
+
+	return Lerp(x1, x2, easedT);
+
+}
 Vector3 Add(const Vector3& v1, const Vector3& v2) {
 	Vector3 result = {};
 

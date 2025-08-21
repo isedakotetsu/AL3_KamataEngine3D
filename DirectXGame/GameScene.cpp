@@ -55,9 +55,9 @@ void GameScene::Initialize() {
 
 	modelenemy_ = Model::CreateFromOBJ("enemy", true);
 
-	for (int32_t i = 0; i < 3; ++i) {
+	for (int32_t i = 0; i < 2; ++i) {
 		Enemy* newEnemy = new Enemy();
-		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(18 + i * 2, 18);
+		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(50 + i * 5,18 );
 		// 自キャラの初期化
 		newEnemy->Initialize(modelenemy_, &camera_, enemyPosition);
 

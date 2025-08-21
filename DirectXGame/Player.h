@@ -26,6 +26,14 @@ public:
 
 	};
 
+	enum class AttackPhase {
+		kUnknown = -1, 
+
+		kAnticipation, 
+		kAction,       
+		kRecovery,     
+	};
+
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -45,11 +53,12 @@ public:
 
 	void InputMove();
 
-	void BehaviorRootUpdate();
-	void BehaviorAttackUpdate();
+	
 	//衝突応答
 	void OnCollision(const Enemy* enemy);
 
+	void BehaviorRootUpdate();
+	void BehaviorAttackUpdate();
 	void BehaviorRootInitialize();
 	void BehaviorAttackInitialize();
 
@@ -70,6 +79,7 @@ private:
 	Behavior behaviorRequest_ = Behavior::kUnknown;
 	// ワールド変換データ
 	KamataEngine::WorldTransform worldTransform_;
+
 
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
 
@@ -131,8 +141,17 @@ private:
 
 	Vector3 CornerPosition(const Vector3& center, Corner corner);
 
+// 攻撃フェーズ
+	AttackPhase attackPhase_ = AttackPhase::kUnknown;
 	
-	
+	//  予備動作の時間
+	static inline const uint32_t kAnticipationTime = 8;
+	//  前進動作の時間
+	static inline const uint32_t kActionTime = 5;
+	//  余韻動作の時間
+	static inline const uint32_t kRecoveryTime = 12;
 
+	//WorldTransform worldTransformAttack_;
+	//KamataEngine::Model* model_ = nullptr;
 	
 };
