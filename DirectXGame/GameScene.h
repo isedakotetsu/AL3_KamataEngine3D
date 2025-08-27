@@ -102,7 +102,7 @@ private:
 
 	DeathParticles* deathParticles_ = nullptr;
 
-	std::list<Enemy*> enemies;
+
 	
 	
 };

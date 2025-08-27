@@ -121,7 +121,7 @@ void GameScene::CheckAllCollisions()
 		    aabb1 = player_->GetAABB();
 
 			// 自キャラと敵弾全ての当たり判定
-			for (Enemy* enemy : enemies) {
+		    for (Enemy* enemy : enemies_) {
 
 				// コリジョン無効の敵はスキップ
 				if (enemy->IsCollisionDisabled())
@@ -182,7 +182,7 @@ void GameScene::Update()
 
 
 	// 0215 7枚目 デスフラグの立った敵を削除
-	enemies.remove_if([](Enemy* enemy) {
+	enemies_.remove_if([](Enemy* enemy) {
 		if (enemy->IsDead()) {
 			delete enemy;
 			return true;

@@ -23,7 +23,7 @@ void Clear::Initialize() {
 	// 0213 22枚目
 	fade_->Start(Fade::Status::FadeIn, 1.0f);
 
-	const float kPlayerTitle = 7.0f;
+	const float kPlayerTitle = 2.0f;
 
 	worldTransformClear_.Initialize();
 

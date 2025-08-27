@@ -105,13 +105,13 @@ void ChageScene()
 			scene = Scene::kOver;
 			delete gameScene;
 			gameScene = nullptr;
-			gameOverScene = nullptr;
+			gameOverScene =new Over;
 			gameOverScene->Initialize();
 		} else if (gameScene->AreAllEnemiesDefeated()) {
 			scene = Scene::kClear;
 			delete gameScene;
 			gameScene = nullptr;
-			gameClearScene = nullptr;
+			gameClearScene = new Clear;
 			gameClearScene->Initialize();
 		}
 		break;
