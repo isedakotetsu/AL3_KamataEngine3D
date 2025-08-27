@@ -11,6 +11,7 @@
 #include "TitleScene.h"
 #include "Fade.h"
 
+
 using namespace KamataEngine;
 
 
@@ -36,6 +37,10 @@ public:
 
 
 	bool IsFnished() const { return finished_; }
+
+	bool AreAllEnemiesDefeated() const;
+
+	Player* GetPlayer() const { return player_; }
 
 private:
 	enum class Phase {
@@ -97,7 +102,7 @@ private:
 
 	DeathParticles* deathParticles_ = nullptr;
 
-	
+	std::list<Enemy*> enemies;
 	
 	
 };

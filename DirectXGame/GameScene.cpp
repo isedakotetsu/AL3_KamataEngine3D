@@ -111,27 +111,36 @@ void GameScene::GenerateBlocks() {
 }
 void GameScene::CheckAllCollisions() 
 {
-	#pragma region
-	AABB aabb1, aabb2;
 
-	aabb1 = player_->GetAABB();
+		// 判定対象1と2の座標
+		AABB aabb1, aabb2;
 
-	for (Enemy* enemy : enemies_)
-	{			
-		if (enemy->IsCollisionDisabled())
-			continue; 
-		aabb2 = enemy->GetAABB();
-
-		if (IsCollision(aabb1, aabb2))
+#pragma region 自キャラと敵キャラの当たり判定
 		{
-			//自キャラのしょうとつ時コールバックを呼び出す
-			player_->OnCollision(enemy);
-			//敵弾の衝突時コールバックを呼び出す
-			enemy->OnCollision(player_);
-		}
-	}
+			// 自キャラの座標
+		    aabb1 = player_->GetAABB();
 
-	#pragma endregion
+			// 自キャラと敵弾全ての当たり判定
+			for (Enemy* enemy : enemies) {
+
+				// コリジョン無効の敵はスキップ
+				if (enemy->IsCollisionDisabled())
+					continue;
+
+				// 敵弾の座標
+				aabb2 = enemy->GetAABB();
+
+				// AABB同士の交差判定
+				if (IsCollision(aabb1, aabb2)) {
+					// 自キャラの衝突時コールバックを呼び出す
+				    player_->OnCollision(enemy);
+					// 敵弾の衝突時コールバックを呼び出す
+				    enemy->OnCollision(player_);
+				}
+			}
+		}
+#pragma endregion
+	
 }
 
 void GameScene::ChagePhase()
@@ -159,8 +168,29 @@ void GameScene::ChagePhase()
 
 }
 
+bool GameScene::AreAllEnemiesDefeated() const
+{ 
+  for (const Enemy* enemy : enemies_) {
+		if (!enemy->IsDead())
+			return false;
+	}
+	return true;
+}
+
 void GameScene::Update()
 {
+
+
+	// 0215 7枚目 デスフラグの立った敵を削除
+	enemies.remove_if([](Enemy* enemy) {
+		if (enemy->IsDead()) {
+			delete enemy;
+			return true;
+		}
+		return false;
+	});
+
+
 	enemies_.remove_if([](Enemy* enemy) {
 		if (enemy->IsDead()) {
 			delete enemy;
@@ -168,6 +198,8 @@ void GameScene::Update()
 		}
 		return false;
 	});
+
+
 
 	ChagePhase();
 	switch (phase_)
@@ -336,7 +368,8 @@ void GameScene::Draw() {
 	fade_->Draw();
 }
 
-GameScene::~GameScene() {
+GameScene::~GameScene() 
+{
 	// delete sprite_;
 	delete debugCamera_;
 
@@ -368,3 +401,4 @@ GameScene::~GameScene() {
 
 	delete mapChipField_;
 }
+
