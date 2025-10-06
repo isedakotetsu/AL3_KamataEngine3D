@@ -40,11 +40,11 @@ void Player::InputMove() {
 	if (onGround_) {
 
 		// 左右移動操作
-		if (Input::GetInstance()->PushKey(DIK_RIGHT) || Input::GetInstance()->PushKey(DIK_LEFT)) {
+		if (Input::GetInstance()->PushKey(DIK_D) || Input::GetInstance()->PushKey(DIK_A)) {
 
 			// 左右加速
 			Vector3 acceleration = {};
-			if (Input::GetInstance()->PushKey(DIK_RIGHT)) {
+			if (Input::GetInstance()->PushKey(DIK_D)) {
 
 				if (velocity_.x < 0.0f) {
 					// 旋回の最初は移動減衰をかける
@@ -56,7 +56,7 @@ void Player::InputMove() {
 					turnFirstRotationY_ = worldTransform_.rotation_.y;
 					turnTimer_ = kTimeTurn;
 				}
-			} else if (Input::GetInstance()->PushKey(DIK_LEFT)) {
+			} else if (Input::GetInstance()->PushKey(DIK_A)) {
 				if (velocity_.x > 0.0f) {
 					// 旋回の最初は移動減衰をかける
 					velocity_.x *= (1.0f - kAttenuation);
@@ -80,7 +80,7 @@ void Player::InputMove() {
 			velocity_.x = 0.0f;
 		}
 
-		if (Input::GetInstance()->PushKey(DIK_UP)) {
+		if (Input::GetInstance()->PushKey(DIK_SPACE)) {
 			// ジャンプ初速
 			velocity_ += Vector3(0, kJumpAcceleration / 60.0f, 0);
 		}
@@ -432,7 +432,7 @@ void Player::BehaviorRootUpdate() {
 
 		worldTransform_.rotation_.y = EaseInOut(destinationRotationY, turnFirstRotationY_, turnTimer_ / kTimeTurn);
 	}
-	if (Input::GetInstance()->TriggerKey(DIK_Q)) {
+	if (Input::GetInstance()->TriggerKey(DIK_W)) {
 
 		behaviorRequest_ = Behavior::kAttack;
 	}
