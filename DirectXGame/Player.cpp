@@ -28,7 +28,7 @@ void Player::BehaviorRootInitialize()
 }
 void Player::BehaviorAttackInitialize() 
 {
-
+	attackParameter_ = 0; 
 }
 
 
@@ -430,7 +430,10 @@ void Player::BehaviorRootUpdate()
 		worldTransform_.rotation_.y = EaseInOut(destinationRotationY, turnFirstRotationY_, turnTimer_ / kTimeTurn);
 	}
 	
-	if (keys)
+	if (Input::GetInstance()->TriggerKey(DIK_Q)) 
+	{
+		behaviorRequest_ = Behavior::kAttack;
+	}
 	
 }
 void Player::BehaviorAttackUpdate() {
