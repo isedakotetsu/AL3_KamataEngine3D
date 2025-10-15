@@ -104,6 +104,7 @@ private:
 	static inline const float kAttenuation = 0.6f;
 	static inline const float kLimitRunSpeed = 0.25f;
 
+	AttackPhase attackPhase_ = AttackPhase::kUnknown;
 	uint32_t attackParameter_ = 0;
 	static inline const float kAttackTime = 30.0f;
 
