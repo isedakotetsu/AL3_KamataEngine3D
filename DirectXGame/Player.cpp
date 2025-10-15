@@ -449,12 +449,12 @@ void Player::BehaviorAttackUpdate()
 	// 02_14 26枚目
 	default: {
 		velocity = {};
-		float t = static_cast<float>(attackParameter_) / kAnticipationTime;
+		float t = static_cast<float>(attackParameter_) / kAttackTime;
 		worldTransform_.scale_.z = EaseOut(1.0f, 0.3f, t);
 		worldTransform_.scale_.y = EaseOut(1.0f, 1.6f, t);
 
 		// 前進動作へ移行
-		if (attackParameter_ >= kAnticipationTime) {
+		if (attackParameter_ >= kAttackTime) {
 			attackPhase_ = AttackPhase::kAction;
 			attackParameter_ = 0; // カウンターをリセット
 		}

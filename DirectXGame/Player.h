@@ -26,7 +26,14 @@ public:
 
 	};
 
-	
+	enum class AttackPhase 
+	{
+		kUnknown = -1,
+
+		kAnticipation,
+		kAction,
+		kRecovery,
+	};
 
 	/// <summary>
 	/// 初期化
