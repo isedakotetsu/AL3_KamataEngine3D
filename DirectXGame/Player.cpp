@@ -436,7 +436,8 @@ void Player::BehaviorRootUpdate()
 	}
 	
 }
-void Player::BehaviorAttackUpdate() {
+void Player::BehaviorAttackUpdate() 
+{
 	// 移動入力(02_07 スライド10枚目)
 	InputMove();
 
@@ -474,6 +475,13 @@ void Player::BehaviorAttackUpdate() {
 
 		worldTransform_.rotation_.y = EaseInOut(destinationRotationY, turnFirstRotationY_, turnTimer_ / kTimeTurn);
 	}
+
+	attackParameter_++;
+
+	if (attackParameter_ >= kAttackTime)
+	{
+		behaviorRequest_ = Behavior::kRoot;
+	}
 }
 
 
@@ -482,7 +490,7 @@ void Player::BehaviorAttackUpdate() {
 void Player ::UpDate() 
 { 
 	
-		// 02_14 15枚目
+	
 	if (behaviorRequest_ != Behavior::kUnknown) {
 		// 振るまいを変更する
 		behavior_ = behaviorRequest_;
@@ -501,7 +509,7 @@ void Player ::UpDate()
 		// 振るまいリクエストをリセット
 		behaviorRequest_ = Behavior::kUnknown;
 	}
-	// 02_14 17枚目
+	
 	switch (behavior_) {
 	case Behavior::kRoot:
 	default:

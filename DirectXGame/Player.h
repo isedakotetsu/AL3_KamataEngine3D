@@ -87,7 +87,7 @@ private:
 	Updatetoransform* updatetransform_ = nullptr;
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
-	uint32_t attackParameter_ = 0;
+	
 
 	KamataEngine::Camera* camera_ = nullptr;
 
@@ -96,6 +96,9 @@ private:
 	static inline const float kAcceleration = 0.5f;
 	static inline const float kAttenuation = 0.6f;
 	static inline const float kLimitRunSpeed = 0.25f;
+
+	uint32_t attackParameter_ = 0;
+	static inline const float kAttackTime = 30.0f;
 
 	LRDirection lrDirection_ = LRDirection::kRight;
 
