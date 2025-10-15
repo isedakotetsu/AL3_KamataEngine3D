@@ -28,7 +28,12 @@ void Player::BehaviorRootInitialize()
 }
 void Player::BehaviorAttackInitialize() 
 {
-	attackParameter_ = 0; 
+	attackParameter_ = 0;
+
+	velocity_ = {};
+
+	// 溜めフェーズから始める
+	attackPhase_ = AttackPhase::kAnticipation;
 }
 
 
