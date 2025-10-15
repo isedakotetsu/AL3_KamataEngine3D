@@ -111,14 +111,6 @@ void Enemy::OnCollision(const Player* player)
 		return;
 	}
 
-	// プレイヤーが攻撃中なら敵が死ぬ
-	// player.hをインクルード
-	if (player->IsAttack()) {
-		// 敵の振るまいをやられに変更
-		behaviorRequest_ = Behavior::kDefeated;
-
-		// 02_15 20枚目 衝突を無効化
-		isCollisionDisabled_ = true;
-	}
+	
 }
 
