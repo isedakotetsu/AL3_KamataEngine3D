@@ -2,9 +2,11 @@
 #include "KamataEngine.h"
 #include "Math.h"
 #include "Updatetransform.h"
+#include "Bullet.h"
 class MapChipField;
 class Enemy;
-class Player {
+class Player 
+{
 public:
 	enum class Behavior
 	{
@@ -26,14 +28,7 @@ public:
 
 	};
 
-	enum class AttackPhase 
-	{
-		kUnknown = -1,
-
-		kAnticipation,
-		kAction,
-		kRecovery,
-	};
+	
 
 	/// <summary>
 	/// 初期化
@@ -55,7 +50,7 @@ public:
 	void InputMove();
 
 	
-
+   
 	
 	//衝突応答
 	void OnCollision(const Enemy* enemy);
@@ -80,6 +75,8 @@ public:
 	
 private:
 
+
+	
 	Behavior behavior_ = Behavior::kRoot;
 	Behavior behaviorRequest_ = Behavior::kUnknown;
 	// ワールド変換データ
@@ -104,9 +101,8 @@ private:
 	static inline const float kAttenuation = 0.6f;
 	static inline const float kLimitRunSpeed = 0.25f;
 
-	AttackPhase attackPhase_ = AttackPhase::kUnknown;
-	uint32_t attackParameter_ = 0;
-	static inline const float kAttackTime = 30.0f;
+
+	
 
 	LRDirection lrDirection_ = LRDirection::kRight;
 
@@ -150,9 +146,18 @@ private:
 
 	Vector3 CornerPosition(const Vector3& center, Corner corner);
 
+	 
+	 // 弾管理
+	std::vector<Bullet*> bullets_;
 
-	
-	
+	// 弾モデルとカメラ
+	Model* bulletModel_ = nullptr;   // attack.obj をここで保持
+	Camera* bulletCamera_ = nullptr; // カメラを保持
+
+    int shootTimer_ = 0;               
+	const int kShootIntervalFrames = 12;
+	bool isShooting_ = false;    
+	void Shoot();
 	
 	
 };

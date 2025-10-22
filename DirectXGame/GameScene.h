@@ -10,6 +10,9 @@
 #include "DeathParticles.h"
 #include "TitleScene.h"
 #include "Fade.h"
+#include "Bullet.h"
+
+
 
 
 using namespace KamataEngine;
@@ -41,6 +44,8 @@ public:
 	bool AreAllEnemiesDefeated() const;
 
 	Player* GetPlayer() const { return player_; }
+	
+
 
 private:
 	enum class Phase {
@@ -77,6 +82,8 @@ private:
 	Model* modelenemy_ = nullptr;
 
 	Model* deathParticle_model_ = nullptr;
+	Model* bullet_model = nullptr;
+
 
 	
 	// ブロックの3Dモデル
@@ -84,15 +91,10 @@ private:
 
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
 
-	// デバッグカメラ有効
-	bool isDebugCameraActive_ = false;
-	
-	DebugCamera* debugCamera_ = nullptr;
 
 	Model* modelskydome_ = nullptr;
 
-	/*Model* modelblock_ = nullptr;*/
-
+	
 	Skydome* skydome_ = nullptr;
 
 	MapChipField* mapChipField_;
@@ -101,6 +103,8 @@ private:
 	CameraController* CController_ = nullptr;
 
 	DeathParticles* deathParticles_ = nullptr;
+
+	Bullet* bullet = nullptr;
 
 
 	

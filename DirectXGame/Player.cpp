@@ -7,6 +7,8 @@
 #include <algorithm>
 #include <cassert>
 #include <numbers>
+#include "GameScene.h"
+
 
 void Player::Initialize(Model* model, Camera* camera, const Vector3& position) {
 
@@ -28,12 +30,14 @@ void Player::BehaviorRootInitialize()
 }
 void Player::BehaviorAttackInitialize() 
 {
-	attackParameter_ = 0;
+	
 
 	velocity_ = {};
+	bulletModel_ = KamataEngine::Model::CreateFromOBJ("attack.obj", true);
+	bulletCamera_ = camera_;
+	
 
-	// 溜めフェーズから始める
-	attackPhase_ = AttackPhase::kAnticipation;
+
 }
 
 
@@ -374,6 +378,8 @@ Vector3 Player::CornerPosition(const Vector3& center, Corner corner) {
 	return center + offsetTable[static_cast<uint32_t>(corner)];
 }
 
+
+
 Vector3 Player::GetWorldPosition() 
 { 
 	Vector3 worldPos;
@@ -441,63 +447,47 @@ void Player::BehaviorRootUpdate()
 	}
 	
 }
+
+void Player::Shoot() 
+{
+	if (!bulletModel_ || !bulletCamera_)
+		return; // nullptr対策
+	Bullet* b = new Bullet();
+	Vector3 dir = (lrDirection_ == LRDirection::kRight) ? Vector3(1, 0, 0) : Vector3(-1, 0, 0);
+	b->Initialize(bulletModel_, bulletCamera_, worldTransform_.translation_, dir, 50.0f);
+	bullets_.push_back(b);
+}
+
 void Player::BehaviorAttackUpdate() 
 {
-	const Vector3 attackVelocity = {0.8f, 0.0f, 0.0f};
+	
 
 	Vector3 velocity{};
 
-	attackParameter_++;
-
-	switch (attackPhase_) {
-	case AttackPhase::kAnticipation: // 溜め動作
-	// 02_14 26枚目
-	default: {
-		velocity = {};
-		float t = static_cast<float>(attackParameter_) / kAttackTime;
-		worldTransform_.scale_.z = EaseOut(1.0f, 0.3f, t);
-		worldTransform_.scale_.y = EaseOut(1.0f, 1.6f, t);
-
-		// 前進動作へ移行
-		if (attackParameter_ >= kAttackTime) {
-			attackPhase_ = AttackPhase::kAction;
-			attackParameter_ = 0; // カウンターをリセット
-		}
-		break;
-	}
-
-	case AttackPhase::kAction: { // 突進動作
-		if (lrDirection_ == LRDirection::kRight) {
-			velocity += attackVelocity;
+	// 弾の更新
+	for (auto it = bullets_.begin(); it != bullets_.end();) {
+		(*it)->Update();
+		if (!(*it)->IsAlive()) {
+			delete *it;
+			it = bullets_.erase(it);
 		} else {
-			velocity -= attackVelocity;
+			++it;
 		}
-
-		float t = static_cast<float>(attackParameter_) / kActionTime;
-		worldTransform_.scale_.z = EaseOut(0.3f, 1.3f, t);
-		worldTransform_.scale_.y = EaseIn(1.6f, 0.7f, t);
-
-		// 余韻動作へ移行
-		if (attackParameter_ >= kActionTime) {
-			attackPhase_ = AttackPhase::kRecovery;
-			attackParameter_ = 0; // パラメータをリセット
-		}
-	} break;
-
-	case AttackPhase::kRecovery: { // 余韻動作
-		velocity = {};
-		float t = static_cast<float>(attackParameter_) / kRecoveryTime;
-		worldTransform_.scale_.z = EaseOut(1.3f, 1.0f, t);
-		worldTransform_.scale_.y = EaseOut(0.7f, 1.0f, t);
-
-		// 通常行動に戻る
-		if (attackParameter_ >= kRecoveryTime) {
-			behaviorRequest_ = Behavior::kRoot;
-		}
-		break;
-	}
 	}
 
+	// 攻撃ボタン押下中
+	if (isShooting_) 
+	{
+		shootTimer_++;
+		if (shootTimer_ >= kShootIntervalFrames) {
+			Shoot();
+			shootTimer_ = 0;
+		}
+	} else {
+		shootTimer_ = kShootIntervalFrames; // ボタン離したらすぐ撃てる状態にする
+	}
+	
+	
 	// 衝突情報を初期化
 	CollisionMapInfo collisionMapInfo = {};
 	collisionMapInfo.move = velocity;
