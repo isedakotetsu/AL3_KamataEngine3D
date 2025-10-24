@@ -8,12 +8,7 @@ class Enemy;
 class Player 
 {
 public:
-	enum class Behavior
-	{
-		kUnknown = -1, 
-		kRoot,
-		kAttack,
-	};
+	
 	enum class LRDirection {
 		kRight,
 		kLeft,
@@ -77,8 +72,7 @@ private:
 
 
 	
-	Behavior behavior_ = Behavior::kRoot;
-	Behavior behaviorRequest_ = Behavior::kUnknown;
+	
 	// ワールド変換データ
 	KamataEngine::WorldTransform worldTransform_;
 
@@ -147,17 +141,9 @@ private:
 	Vector3 CornerPosition(const Vector3& center, Corner corner);
 
 	 
-	 // 弾管理
-	std::vector<Bullet*> bullets_;
+	
+	
 
-	// 弾モデルとカメラ
-	Model* bulletModel_ = nullptr;   // attack.obj をここで保持
-	Camera* bulletCamera_ = nullptr; // カメラを保持
-
-    int shootTimer_ = 0;               
-	const int kShootIntervalFrames = 12;
-	bool isShooting_ = false;    
-	void Shoot();
 	
 	
 };

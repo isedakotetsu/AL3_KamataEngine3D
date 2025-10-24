@@ -33,8 +33,7 @@ void Player::BehaviorAttackInitialize()
 	
 
 	velocity_ = {};
-	bulletModel_ = KamataEngine::Model::CreateFromOBJ("attack.obj", true);
-	bulletCamera_ = camera_;
+	
 	
 
 
@@ -441,75 +440,20 @@ void Player::BehaviorRootUpdate()
 		worldTransform_.rotation_.y = EaseInOut(destinationRotationY, turnFirstRotationY_, turnTimer_ / kTimeTurn);
 	}
 	
-	if (Input::GetInstance()->TriggerKey(DIK_Q)) 
+	/*if (Input::GetInstance()->TriggerKey(DIK_Q)) 
 	{
-		behaviorRequest_ = Behavior::kAttack;
-	}
+		
+	}*/
 	
 }
 
-void Player::Shoot() 
-{
-	if (!bulletModel_ || !bulletCamera_)
-		return; // nullptr対策
-	Bullet* b = new Bullet();
-	Vector3 dir = (lrDirection_ == LRDirection::kRight) ? Vector3(1, 0, 0) : Vector3(-1, 0, 0);
-	b->Initialize(bulletModel_, bulletCamera_, worldTransform_.translation_, dir, 50.0f);
-	bullets_.push_back(b);
-}
+
 
 void Player::BehaviorAttackUpdate() 
 {
 	
 
-	Vector3 velocity{};
-
-	// 弾の更新
-	for (auto it = bullets_.begin(); it != bullets_.end();) {
-		(*it)->Update();
-		if (!(*it)->IsAlive()) {
-			delete *it;
-			it = bullets_.erase(it);
-		} else {
-			++it;
-		}
-	}
-
-	// 攻撃ボタン押下中
-	if (isShooting_) 
-	{
-		shootTimer_++;
-		if (shootTimer_ >= kShootIntervalFrames) {
-			Shoot();
-			shootTimer_ = 0;
-		}
-	} else {
-		shootTimer_ = kShootIntervalFrames; // ボタン離したらすぐ撃てる状態にする
-	}
 	
-	
-	// 衝突情報を初期化
-	CollisionMapInfo collisionMapInfo = {};
-	collisionMapInfo.move = velocity;
-	collisionMapInfo.landing = false;
-	collisionMapInfo.hitWall = false;
-
-	// マップ衝突チェック
-	CheckMapCollision(collisionMapInfo);
-
-	// 移動
-	worldTransform_.translation_ += collisionMapInfo.move;
-
-	if (turnTimer_ > 0.0f) {
-		// タイマーを進める
-		turnTimer_ = std::max(turnTimer_ - (1.0f / 60.0f), 0.0f);
-
-		float destinationRotationYTable[] = {std::numbers::pi_v<float> / 2.0f, std::numbers::pi_v<float> * 3.0f / 2.0f};
-
-		float destinationRotationY = destinationRotationYTable[static_cast<uint32_t>(lrDirection_)];
-
-		worldTransform_.rotation_.y = EaseInOut(destinationRotationY, turnFirstRotationY_, turnTimer_ / kTimeTurn);
-	}
 }
 
 
@@ -519,34 +463,7 @@ void Player ::UpDate()
 { 
 	
 	
-	if (behaviorRequest_ != Behavior::kUnknown) {
-		// 振るまいを変更する
-		behavior_ = behaviorRequest_;
-
-		// 各振るまいごとの初期化を実行
-		switch (behavior_) {
-		case Behavior::kRoot:
-		default:
-			BehaviorRootInitialize();
-			break;
-		case Behavior::kAttack:
-			BehaviorAttackInitialize();
-			break;
-		}
-
-		// 振るまいリクエストをリセット
-		behaviorRequest_ = Behavior::kUnknown;
-	}
-	
-	switch (behavior_) {
-	case Behavior::kRoot:
-	default:
-		BehaviorRootUpdate();
-		break;
-	case Behavior::kAttack:
-		BehaviorAttackUpdate();
-		break;
-	}
+	BehaviorRootUpdate();
 	
 	// ワールド行列更新（アフィン変換～DirectXに転送）
 	updatetransform_->WorldTransformUpdate(worldTransform_);

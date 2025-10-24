@@ -10,7 +10,7 @@
 #include "DeathParticles.h"
 #include "TitleScene.h"
 #include "Fade.h"
-#include "Bullet.h"
+
 
 
 
@@ -104,7 +104,7 @@ private:
 
 	DeathParticles* deathParticles_ = nullptr;
 
-	Bullet* bullet = nullptr;
+	
 
 
 	

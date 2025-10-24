@@ -25,6 +25,7 @@ void GameScene::Initialize() {
 	// 初期化
 	modelskydome_ = Model::CreateFromOBJ("skyDome", true);
 	skydome_->Initialize(modelskydome_, &camera_);
+	
 
 	
 
@@ -53,10 +54,9 @@ void GameScene::Initialize() {
 
 
 
-	bullet = new Bullet();
 	
-	skydome_->Initialize(bullet_model, &camera_);
-	bullet_model = Model::CreateFromOBJ("attack");
+	
+	
 	
 
 	modelenemy_ = Model::CreateFromOBJ("enemy", true);
@@ -250,7 +250,7 @@ void GameScene::Update()
 			skydome_->Update();
 		    CController_->Update();
 		    player_->UpDate();
-		    bullet->Update();
+		   
 			
 		    for (Enemy* enemy : enemies_) 
 			{
@@ -306,7 +306,7 @@ void GameScene::Draw()
 	if (!player_->IsDead())
 		player_->Draw();
 
-	bullet->Draw();
+	
 	for (Enemy* enemy : enemies_) {
 		enemy->Draw();
 	}
