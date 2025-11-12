@@ -15,6 +15,7 @@
 
 
 
+
 using namespace KamataEngine;
 
 
@@ -74,6 +75,7 @@ private:
 
 	// 自キャラ
 	Player* player_ = nullptr;
+	
 	//敵
 	std::list<Enemy*> enemies_;
 	// 自キャラモデル
@@ -82,9 +84,8 @@ private:
 	Model* modelenemy_ = nullptr;
 
 	Model* deathParticle_model_ = nullptr;
-	Model* bullet_model = nullptr;
 
-
+	
 	
 	// ブロックの3Dモデル
 	Model* blockModel_ = nullptr;

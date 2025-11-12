@@ -30,13 +30,10 @@ void Player::BehaviorRootInitialize()
 }
 void Player::BehaviorAttackInitialize() 
 {
-	
-
 	velocity_ = {};
+
 	
 	
-
-
 }
 
 
@@ -391,6 +388,8 @@ Vector3 Player::GetWorldPosition()
 
 }
 
+
+
 AABB Player::GetAABB() 
 { 
 	Vector3 worldPos = GetWorldPosition();
@@ -440,10 +439,7 @@ void Player::BehaviorRootUpdate()
 		worldTransform_.rotation_.y = EaseInOut(destinationRotationY, turnFirstRotationY_, turnTimer_ / kTimeTurn);
 	}
 	
-	/*if (Input::GetInstance()->TriggerKey(DIK_Q)) 
-	{
-		
-	}*/
+	 
 	
 }
 
@@ -452,7 +448,6 @@ void Player::BehaviorRootUpdate()
 void Player::BehaviorAttackUpdate() 
 {
 	
-
 	
 }
 
@@ -467,7 +462,7 @@ void Player ::UpDate()
 	
 	// ワールド行列更新（アフィン変換～DirectXに転送）
 	updatetransform_->WorldTransformUpdate(worldTransform_);
-	//updatetransform_->WorldTransformUpdate(worldTransformAttack_);
+
 
 }
 

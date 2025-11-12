@@ -51,11 +51,6 @@ void GameScene::Initialize() {
 
 	
 	
-
-
-
-	
-	
 	
 	
 
@@ -305,7 +300,7 @@ void GameScene::Draw()
 
 	if (!player_->IsDead())
 		player_->Draw();
-
+       
 	
 	for (Enemy* enemy : enemies_) {
 		enemy->Draw();
@@ -352,6 +347,8 @@ GameScene::~GameScene()
 	delete player_;
 
 	delete deathParticle_model_;
+
+	
 
 
 	

@@ -45,6 +45,7 @@ public:
 	void InputMove();
 
 	
+	
    
 	
 	//衝突応答
@@ -60,19 +61,20 @@ public:
 
 	Vector3 GetWorldPosition();
 
-	
-
 	// ですフラグ
 	bool isDead_ = false;
 	// デスフラグのgetter
 	bool IsDead() const { return isDead_; }
 
 	
+
+	
 private:
 
 
 	
-	
+
+
 	// ワールド変換データ
 	KamataEngine::WorldTransform worldTransform_;
 
@@ -140,10 +142,7 @@ private:
 
 	Vector3 CornerPosition(const Vector3& center, Corner corner);
 
-	 
-	
-	
-
-	
+   
+   
 	
 };
