@@ -142,7 +142,6 @@ private:
 
 	Vector3 CornerPosition(const Vector3& center, Corner corner);
 
-   
-   
+
 	
 };

@@ -16,5 +16,5 @@ private:
 	Camera* camera_ = nullptr;
 	WorldTransform worldTransform_;
 	Updatetoransform* updatetransform_ = nullptr;
-	
+	uint32_t textureHandle_ = 0u;
 };
