@@ -16,8 +16,6 @@
 
 
 
-using namespace KamataEngine;
-
 
 
 // ゲームシーン

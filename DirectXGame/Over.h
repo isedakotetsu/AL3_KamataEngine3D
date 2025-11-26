@@ -3,7 +3,7 @@
 #include "KamataEngine.h"
 #include "Updatetransform.h"
 
-using namespace KamataEngine;
+
 
 class Over {
 public:

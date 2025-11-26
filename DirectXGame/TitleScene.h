@@ -3,7 +3,6 @@
 #include "Updatetransform.h"
 #include "Fade.h"
 
-using namespace KamataEngine;
 
 class TitleScene
 {

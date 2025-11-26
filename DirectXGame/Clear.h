@@ -3,8 +3,6 @@
 #include "KamataEngine.h"
 #include "Updatetransform.h"
 
-using namespace KamataEngine;
-
 class Clear {
 public:
 	enum class Phase {
@@ -30,11 +28,11 @@ private:
 	static inline const float kTimeClearMove = 2.0f;
 
 	// ビュープロジェクション
-	Camera camera_;
-	WorldTransform worldTransformClear_;
-	WorldTransform worldTransformPlayer_;
+	KamataEngine::Camera camera_;
+	KamataEngine::WorldTransform worldTransformClear_;
+	KamataEngine::WorldTransform worldTransformPlayer_;
 	Updatetoransform* updatetransform_ = nullptr;
-	Model* modelClear_ = nullptr;
+	KamataEngine::Model* modelClear_ = nullptr;
 	Fade* fade_ = nullptr;
 
 	float counter_ = 0.0f;

@@ -2,9 +2,10 @@
 #include "KamataEngine.h"
 #include "Math.h"
 
-using namespace KamataEngine;
 
-class Updatetoransform {
+
+class Updatetoransform 
+{
 public:
 	void WorldTransformUpdate(KamataEngine::WorldTransform& worldTransform);
 
