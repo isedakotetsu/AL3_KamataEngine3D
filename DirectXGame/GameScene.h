@@ -61,15 +61,15 @@ private:
 	Fade* fade_ = nullptr;
 	Phase phase_;
 
-	Sprite* sprite_ = nullptr;
+	KamataEngine::Sprite* sprite_ = nullptr;
 
 	//////3Dモデル
-	Model* model_ = nullptr;
+	KamataEngine::Model* model_ = nullptr;
 
-	WorldTransform worldTransform_;
+	KamataEngine::WorldTransform worldTransform_;
 
 	// カメラ
-	Camera camera_;
+	KamataEngine::Camera camera_;
 
 	// 自キャラ
 	Player* player_ = nullptr;
@@ -77,21 +77,21 @@ private:
 	//敵
 	std::list<Enemy*> enemies_;
 	// 自キャラモデル
-	Model* modelplayer_ = nullptr;
+	KamataEngine::Model* modelplayer_ = nullptr;
 	//敵モデル
-	Model* modelenemy_ = nullptr;
+	KamataEngine::Model* modelenemy_ = nullptr;
 
-	Model* deathParticle_model_ = nullptr;
+	KamataEngine::Model* deathParticle_model_ = nullptr;
 
 	
 	
 	// ブロックの3Dモデル
-	Model* blockModel_ = nullptr;
+	KamataEngine::Model* blockModel_ = nullptr;
 
-	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
+	std::vector<std::vector<KamataEngine::WorldTransform*>> worldTransformBlocks_;
 
 
-	Model* modelskydome_ = nullptr;
+	KamataEngine::Model* modelskydome_ = nullptr;
 
 	
 	Skydome* skydome_ = nullptr;

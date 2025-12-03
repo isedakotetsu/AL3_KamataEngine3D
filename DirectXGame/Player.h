@@ -23,12 +23,12 @@ public:
 
 	};
 
-	
+	~Player();
 
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera, const Vector3& position);
+	void Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera, const KamataEngine::Vector3& position);
 
 	/// <summary>
 	/// 更新
@@ -45,7 +45,7 @@ public:
 	void InputMove();
 
 	
-	
+	void Shot(const KamataEngine::Vector3& position);
    
 	
 	//衝突応答
@@ -55,11 +55,11 @@ public:
 	void BehaviorAttackUpdate();
 	void BehaviorAttackInitialize();
 
-	const WorldTransform& GetWorldTransform() const { return worldTransform_; }
+	const KamataEngine::WorldTransform& GetWorldTransform() const { return worldTransform_; }
 	const KamataEngine::Vector3& GetVelocity() const { return velocity_; }
 	AABB GetAABB();
 
-	Vector3 GetWorldPosition();
+	KamataEngine::Vector3 GetWorldPosition();
 
 	// ですフラグ
 	bool isDead_ = false;
@@ -79,7 +79,7 @@ private:
 	KamataEngine::WorldTransform worldTransform_;
 
 
-	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
+	std::vector<std::vector<KamataEngine::WorldTransform*>> worldTransformBlocks_;
 
 	// モデル
 	KamataEngine::Model* model_ = nullptr;
@@ -91,7 +91,7 @@ private:
 
 	KamataEngine::Camera* camera_ = nullptr;
 
-	Vector3 velocity_ = {};
+	KamataEngine::Vector3 velocity_ = {};
 
 	static inline const float kAcceleration = 0.5f;
 	static inline const float kAttenuation = 0.6f;
@@ -128,7 +128,7 @@ private:
 		bool ceiling = false;
 		bool landing = false;
 		bool hitWall = false;
-		Vector3 move;
+		KamataEngine::Vector3 move;
 	};
 
 	void CheckMapCollision(CollisionMapInfo& info);
@@ -140,8 +140,11 @@ private:
 	void CheckMapCollisionLeft(CollisionMapInfo& info);
 	
 
-	Vector3 CornerPosition(const Vector3& center, Corner corner);
+	KamataEngine::Vector3 CornerPosition(const KamataEngine::Vector3& center, Corner corner);
 
-
-	
+	std::list<Bullet*> bullets_;
+	KamataEngine::Model* Bulletmodel_ = nullptr;
+	//バレット用変数
+	int shotTimer_ = 0;
+	const int kShotInterval_ = 30; // 60 フレームに1発 (1秒に1発)
 };

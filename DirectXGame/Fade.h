@@ -30,7 +30,7 @@ public:
 	bool IsFinished() const;
 
 private:
-	Sprite* sprite_ = nullptr;
+	KamataEngine::Sprite* sprite_ = nullptr;
 
 	Status status_ = Status::None;
 	//フェードの持続時間

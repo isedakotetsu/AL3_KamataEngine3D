@@ -1,6 +1,6 @@
 # Blender 3.3.1
 # www.blender.org
-mtllib deathParticle.mtl
+mtllib attack.mtl
 o 球
 v -0.067650 0.230970 0.067650
 v -0.125000 0.176777 0.125000

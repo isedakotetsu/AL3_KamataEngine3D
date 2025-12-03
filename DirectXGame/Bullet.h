@@ -5,16 +5,15 @@
 
 class Bullet {
 public:
-	void Initialize(Model* model, const Vector3& position);
+	void Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera, KamataEngine::Vector3& position, const KamataEngine::Vector3& velocity);
 	void Update();
-	void Draw(const Camera& camera);
+	void Draw();
 	
 
-
 private:
-	Model* model_ = nullptr;
-	Camera* camera_ = nullptr;
-	WorldTransform worldTransform_;
+	KamataEngine::WorldTransform worldTransform_;
 	Updatetoransform* updatetransform_ = nullptr;
-	uint32_t textureHandle_ = 0u;
+	KamataEngine::Model* model_ = nullptr;
+	KamataEngine::Camera* camera_ = nullptr;
+	KamataEngine::Vector3 velocity_ = {};
 };

@@ -4,7 +4,7 @@
 #include "Math.h"
 #include <algorithm>
 #include <cassert>
-void Enemy::Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera, const Vector3& position) {
+void Enemy::Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera, const KamataEngine::Vector3& position) {
 	assert(model);
 	// モデル
 	model_ = model;
@@ -72,16 +72,16 @@ void Enemy::UpDate()
 
 void Enemy::Draw() 
 {
-	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
+	KamataEngine::DirectXCommon* dxCommon = KamataEngine::DirectXCommon::GetInstance();
 
-	Model::PreDraw(dxCommon->GetCommandList());
+	KamataEngine::Model::PreDraw(dxCommon->GetCommandList());
 
 	model_->Draw(worldTransform_, *camera_);
 
-	Model::PostDraw();
+	KamataEngine::Model::PostDraw();
 }
-Vector3 Enemy::GetWorldPosition() {
-	Vector3 worldPos;
+KamataEngine::Vector3 Enemy::GetWorldPosition() {
+	KamataEngine::Vector3 worldPos;
 
 	worldPos.x = worldTransform_.matWorld_.m[3][0];
 	worldPos.y = worldTransform_.matWorld_.m[3][1];
@@ -92,7 +92,7 @@ Vector3 Enemy::GetWorldPosition() {
 
 AABB Enemy::GetAABB() 
 { 
-	Vector3 worldPos = GetWorldPosition();
+	KamataEngine::Vector3 worldPos = GetWorldPosition();
 	AABB aabb;
 
 	aabb.min = {worldPos.x - kWidth / 2.0f, worldPos.y - kHeight / 2.0f, worldPos.z - kWidth / 2.0f};

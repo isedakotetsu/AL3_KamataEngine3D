@@ -14,8 +14,8 @@ void TitleScene::Initialize() {
 	fade_->Initialize();
 	fade_->Start(Fade::Status::FadeIn, 1.0f);
 
-	modelTitle_ = Model::CreateFromOBJ("titleFont", true);
-	modelPlayer_ = Model::CreateFromOBJ("player");
+	modelTitle_ = KamataEngine::Model::CreateFromOBJ("titleFont", true);
+	modelPlayer_ = KamataEngine::Model::CreateFromOBJ("player");
 
 	// カメラ初期化
 	camera_.Initialize();
@@ -52,7 +52,7 @@ void TitleScene::Update() {
 		}
 		break;
 	case Phase::kMain:
-		if (Input::GetInstance()->PushKey(DIK_SPACE)) {
+		if (KamataEngine::Input::GetInstance()->PushKey(DIK_SPACE)) {
 			phase_ = Phase::kFadeOut;
 			fade_->Start(Fade::Status::FadeOut, 1.0f);
 		}
@@ -83,15 +83,15 @@ void TitleScene::Update() {
 
 void TitleScene::Draw() {
 
-	DirectXCommon* dxCommon_ = DirectXCommon::GetInstance();
+	KamataEngine::DirectXCommon* dxCommon_ = KamataEngine::DirectXCommon::GetInstance();
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
 
-	Model::PreDraw(commandList);
+	KamataEngine::Model::PreDraw(commandList);
 
 	modelTitle_->Draw(worldTransformTitle_, camera_);
 	modelPlayer_->Draw(worldTransformPlayer_, camera_);
 	fade_->Draw();
 
-	Model::PostDraw();
+	KamataEngine::Model::PostDraw();
 }

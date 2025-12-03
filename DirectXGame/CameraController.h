@@ -35,11 +35,11 @@ private:
     Player* target_ = nullptr;
 	
 	//追従対象とカメラの座標の差（オフセット）
-	Vector3 target0ffset_ = {0, 0, -15.0f};
+	KamataEngine::Vector3 target0ffset_ = {0, 0, -15.0f};
 	// カメラ移動範囲
 	Rect movableArea_ = {0, 100, 0, 100};
 	// カメラの目標座標
-	Vector3 destination_;
+	KamataEngine::Vector3 destination_;
 	//座標補間割合
 	static inline const float kInterpolationRate = 0.1f;
 	//速度掛け率

@@ -2,7 +2,7 @@
 
 
 
-void Skydome::Initialize(Model* model, Camera* camera) { 
+void Skydome::Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera) { 
 	
 	model_ = model;
 	camera_ = camera;
@@ -19,9 +19,9 @@ void Skydome::Update()
 void Skydome::Draw()
 {
 	
-	DirectXCommon* dxcommon = DirectXCommon::GetInstance();
-	Model::PreDraw(dxcommon->GetCommandList());
+	KamataEngine::DirectXCommon* dxcommon = KamataEngine::DirectXCommon::GetInstance();
+	KamataEngine::Model::PreDraw(dxcommon->GetCommandList());
 	model_->Draw(worldTransform_, *camera_);
-	Model::PostDraw();
+	KamataEngine::Model::PostDraw();
 	
 }

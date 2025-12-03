@@ -12,7 +12,7 @@ Over::~Over()
 
 void Over::Initialize() {
 
-	modelOver_ = Model::CreateFromOBJ("GameOver", true);
+	modelOver_ = KamataEngine::Model::CreateFromOBJ("GameOver", true);
 
 	// カメラ初期化
 	camera_.Initialize();
@@ -47,7 +47,7 @@ void Over::Update() {
 		}
 		break;
 	case Phase::kMain:
-		if (Input::GetInstance()->PushKey(DIK_SPACE)) {
+		if (KamataEngine::Input::GetInstance()->PushKey(DIK_SPACE)) {
 			fade_->Start(Fade::Status::FadeOut, 1.0f);
 			phase_ = Phase::kFadeOut;
 		}
@@ -77,14 +77,14 @@ void Over::Update() {
 
 void Over::Draw() {
 
-	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
+	KamataEngine::DirectXCommon* dxCommon = KamataEngine::DirectXCommon::GetInstance();
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = dxCommon->GetCommandList();
 
-	Model::PreDraw(commandList);
+	KamataEngine::Model::PreDraw(commandList);
 
 	modelOver_->Draw(worldTransformOver_, camera_);
 
 	fade_->Draw();
-	Model::PostDraw();
+	KamataEngine::Model::PostDraw();
 }

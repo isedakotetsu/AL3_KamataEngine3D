@@ -11,7 +11,7 @@ public:
 		kWalk,         // 歩行状態
 		kDefeated,     // やられ状態
 	};
-	void Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera, const Vector3& position);
+	void Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera, const KamataEngine::Vector3& position);
 
 	/// <summary>
 	/// 更新
@@ -51,9 +51,9 @@ private:
 
 	float walkTimer_ = 0.0f;
 
-	Vector3 velocity_ = {};
+	KamataEngine::Vector3 velocity_ = {};
 
-	Vector3 GetWorldPosition();
+	KamataEngine::Vector3 GetWorldPosition();
 	bool isDead_ = false;
 
 	Behavior behavior_ = Behavior::kWalk;

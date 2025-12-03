@@ -2,43 +2,43 @@
 #include <cmath>
 #include <numbers>
 
-const Vector3 operator*(const Vector3& v1, const float f) {
-	Vector3 temp(v1);
+const KamataEngine::Vector3 operator*(const KamataEngine::Vector3& v1, const float f) {
+	KamataEngine::Vector3 temp(v1);
 	return temp *= f;
 }
-const Vector3 operator+(const Vector3& v1, const Vector3& v2) {
-	Vector3 temp(v1);
+const KamataEngine::Vector3 operator+(const KamataEngine::Vector3& v1, const KamataEngine::Vector3& v2) {
+	KamataEngine::Vector3 temp(v1);
 	return temp += v2;
 }
-Vector3& operator+=(Vector3& lhv, const Vector3& rhv) {
+KamataEngine::Vector3& operator+=(KamataEngine::Vector3& lhv, const KamataEngine::Vector3& rhv) {
 	lhv.x += rhv.x;
 	lhv.y += rhv.y;
 	lhv.z += rhv.z;
 	return lhv;
 }
-Vector3& operator-=(Vector3& lhv, const Vector3& rhv) {
+KamataEngine::Vector3& operator-=(KamataEngine::Vector3& lhv, const KamataEngine::Vector3& rhv) {
 	lhv.x -= rhv.x;
 	lhv.y -= rhv.y;
 	lhv.z -= rhv.z;
 	return lhv;
 }
 
-Vector3& operator*=(Vector3& v, float s) {
+KamataEngine::Vector3& operator*=(KamataEngine::Vector3& v, float s) {
 	v.x *= s;
 	v.y *= s;
 	v.z *= s;
 	return v;
 }
 
-Vector3& operator/=(Vector3& v, float s) {
+KamataEngine::Vector3& operator/=(KamataEngine::Vector3& v, float s) {
 	v.x /= s;
 	v.y /= s;
 	v.z /= s;
 	return v;
 }
 
-Matrix4x4& operator*=(Matrix4x4& lhm, const Matrix4x4& rhm) {
-	Matrix4x4 result{};
+KamataEngine::Matrix4x4& operator*=(KamataEngine::Matrix4x4& lhm, const KamataEngine::Matrix4x4& rhm) {
+	KamataEngine::Matrix4x4 result{};
 
 	for (size_t i = 0; i < 4; i++) {
 		for (size_t j = 0; j < 4; j++) {
@@ -51,15 +51,12 @@ Matrix4x4& operator*=(Matrix4x4& lhm, const Matrix4x4& rhm) {
 	return lhm;
 }
 
-Matrix4x4 operator*(const Matrix4x4& m1, const Matrix4x4& m2) {
-	Matrix4x4 result = m1;
+KamataEngine::Matrix4x4 operator*(const KamataEngine::Matrix4x4& m1, const KamataEngine::Matrix4x4& m2) {
+	KamataEngine::Matrix4x4 result = m1;
 
 	return result *= m2;
 }
-Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t) 
-{
-	return Vector3(Lerp(v1.x, v2.x, t), Lerp(v1.y, v2.y, t), Lerp(v1.z, v2.z, t));
-}
+KamataEngine::Vector3 Lerp(const KamataEngine::Vector3& v1, const KamataEngine::Vector3& v2, float t) { return KamataEngine::Vector3(Lerp(v1.x, v2.x, t), Lerp(v1.y, v2.y, t), Lerp(v1.z, v2.z, t)); }
 float Lerp(float x1, float x2, float t) { return (1.0f - t) * x1 + t * x2; }
 
 float EaseInOut(float start, float end, float t) {
@@ -81,8 +78,8 @@ float EaseOut(float x1, float x2, float t)
 	return Lerp(x1, x2, easedT);
 
 }
-Vector3 Add(const Vector3& v1, const Vector3& v2) {
-	Vector3 result = {};
+KamataEngine::Vector3 Add(const KamataEngine::Vector3& v1, const KamataEngine::Vector3& v2) {
+	KamataEngine::Vector3 result = {};
 
 	result.x = v1.x + v2.x;
 	result.y = v1.y + v2.y;
@@ -91,8 +88,8 @@ Vector3 Add(const Vector3& v1, const Vector3& v2) {
 	return result;
 }
 
-Vector3 Subtract(const Vector3& v1, const Vector3& v2) {
-	Vector3 result = {};
+KamataEngine::Vector3 Subtract(const KamataEngine::Vector3& v1, const KamataEngine::Vector3& v2) {
+	KamataEngine::Vector3 result = {};
 	result.x = v1.x - v2.x;
 	result.y = v1.y - v2.y;
 	result.z = v1.z - v2.z;
@@ -100,8 +97,8 @@ Vector3 Subtract(const Vector3& v1, const Vector3& v2) {
 	return result;
 }
 
-Vector3 Multiply(float scalar, const Vector3& v1) {
-	Vector3 result = {};
+KamataEngine::Vector3 Multiply(float scalar, const KamataEngine::Vector3& v1) {
+	KamataEngine::Vector3 result = {};
 
 	result.x = scalar * v1.x;
 	result.y = scalar * v1.y;
@@ -110,7 +107,7 @@ Vector3 Multiply(float scalar, const Vector3& v1) {
 	return result;
 }
 
-float Dot(const Vector3& v1, const Vector3& v2) {
+float Dot(const KamataEngine::Vector3& v1, const KamataEngine::Vector3& v2) {
 	float result = {};
 
 	result = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
@@ -118,10 +115,10 @@ float Dot(const Vector3& v1, const Vector3& v2) {
 	return result;
 }
 
-float Length(const Vector3& v1) { return sqrtf(v1.x * v1.x + v1.y * v1.y + v1.z * v1.z); }
+float Length(const KamataEngine::Vector3& v1) { return sqrtf(v1.x * v1.x + v1.y * v1.y + v1.z * v1.z); }
 
-Vector3 Normalize(const Vector3& v2) {
-	Vector3 result = {};
+KamataEngine::Vector3 Normalize(const KamataEngine::Vector3& v2) {
+	KamataEngine::Vector3 result = {};
 
 	result.x = v2.x / Length(v2);
 	result.y = v2.y / Length(v2);
@@ -129,8 +126,8 @@ Vector3 Normalize(const Vector3& v2) {
 	return result;
 }
 
-Matrix4x4 Add(const Matrix4x4& m1, const Matrix4x4& m2) {
-	Matrix4x4 result{};
+KamataEngine::Matrix4x4 Add(const KamataEngine::Matrix4x4& m1, const KamataEngine::Matrix4x4& m2) {
+	KamataEngine::Matrix4x4 result{};
 
 	// 1行目
 	result.m[0][0] = m1.m[0][0] + m2.m[0][0];
@@ -159,8 +156,8 @@ Matrix4x4 Add(const Matrix4x4& m1, const Matrix4x4& m2) {
 	return result;
 }
 
-Matrix4x4 Subtract(const Matrix4x4& m1, const Matrix4x4& m2) {
-	Matrix4x4 result = {};
+KamataEngine::Matrix4x4 Subtract(const KamataEngine::Matrix4x4& m1, const KamataEngine::Matrix4x4& m2) {
+	KamataEngine::Matrix4x4 result = {};
 
 	// 1行目
 	result.m[0][0] = m1.m[0][0] - m2.m[0][0];
@@ -189,8 +186,8 @@ Matrix4x4 Subtract(const Matrix4x4& m1, const Matrix4x4& m2) {
 	return result;
 }
 
-Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
-	Matrix4x4 result = {};
+KamataEngine::Matrix4x4 Multiply(const KamataEngine::Matrix4x4& m1, const KamataEngine::Matrix4x4& m2) {
+	KamataEngine::Matrix4x4 result = {};
 
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
@@ -203,8 +200,8 @@ Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
 	return result;
 }
 
-Matrix4x4 Inverse(const Matrix4x4& m) {
-	Matrix4x4 result{};
+KamataEngine::Matrix4x4 Inverse(const KamataEngine::Matrix4x4& m) {
+	KamataEngine::Matrix4x4 result{};
 	float determinant =
 	    m.m[0][3] * m.m[1][2] * m.m[2][1] * m.m[3][0] - m.m[0][2] * m.m[1][3] * m.m[2][1] * m.m[3][0] - m.m[0][3] * m.m[1][1] * m.m[2][2] * m.m[3][0] + m.m[0][1] * m.m[1][3] * m.m[2][2] * m.m[3][0] +
 	    m.m[0][2] * m.m[1][1] * m.m[2][3] * m.m[3][0] - m.m[0][1] * m.m[1][2] * m.m[2][3] * m.m[3][0] - m.m[0][3] * m.m[1][2] * m.m[2][0] * m.m[3][1] + m.m[0][2] * m.m[1][3] * m.m[2][0] * m.m[3][1] +
@@ -266,8 +263,8 @@ Matrix4x4 Inverse(const Matrix4x4& m) {
 	return result;
 }
 
-Matrix4x4 Transpose(const Matrix4x4& m) {
-	Matrix4x4 result = {};
+KamataEngine::Matrix4x4 Transpose(const KamataEngine::Matrix4x4& m) {
+	KamataEngine::Matrix4x4 result = {};
 
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
@@ -278,8 +275,8 @@ Matrix4x4 Transpose(const Matrix4x4& m) {
 	return result;
 }
 
-Matrix4x4 MakeIdenity4x4() {
-	Matrix4x4 result = {};
+KamataEngine::Matrix4x4 MakeIdenity4x4() {
+	KamataEngine::Matrix4x4 result = {};
 
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
@@ -295,8 +292,8 @@ Matrix4x4 MakeIdenity4x4() {
 	return result;
 }
 
-Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix) {
-	Vector3 result = {};
+KamataEngine::Vector3 Transform(const KamataEngine::Vector3& vector, const KamataEngine::Matrix4x4& matrix) {
+	KamataEngine::Vector3 result = {};
 
 	result.x = vector.x * matrix.m[0][0] + vector.y * matrix.m[1][0] + vector.z * matrix.m[2][0] + 1.0f * matrix.m[3][0];
 
@@ -317,8 +314,8 @@ Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix) {
 	return result;
 }
 
-Matrix4x4 MakeTranslateMatrix(const Vector3& translate) {
-	Matrix4x4 result = {};
+KamataEngine::Matrix4x4 MakeTranslateMatrix(const KamataEngine::Vector3& translate) {
+	KamataEngine::Matrix4x4 result = {};
 
 	result.m[0][0] = 1.0f;
 	result.m[0][1] = 0.0f;
@@ -342,8 +339,8 @@ Matrix4x4 MakeTranslateMatrix(const Vector3& translate) {
 	return result;
 }
 
-Matrix4x4 MakeScaleMatrix(const Vector3& scale) {
-	Matrix4x4 result = {};
+KamataEngine::Matrix4x4 MakeScaleMatrix(const KamataEngine::Vector3& scale) {
+	KamataEngine::Matrix4x4 result = {};
 
 	result.m[0][0] = scale.x;
 	result.m[0][1] = 0.0f;
@@ -367,8 +364,8 @@ Matrix4x4 MakeScaleMatrix(const Vector3& scale) {
 	return result;
 }
 
-Matrix4x4 MakeRotateXMatrix(float radian) {
-	Matrix4x4 result = {};
+KamataEngine::Matrix4x4 MakeRotateXMatrix(float radian) {
+	KamataEngine::Matrix4x4 result = {};
 
 	result.m[0][0] = 1.0f;
 	result.m[0][1] = 0.0f;
@@ -393,8 +390,8 @@ Matrix4x4 MakeRotateXMatrix(float radian) {
 	return result;
 }
 
-Matrix4x4 MakeRotateYMatrix(float radian) {
-	Matrix4x4 result = {};
+KamataEngine::Matrix4x4 MakeRotateYMatrix(float radian) {
+	KamataEngine::Matrix4x4 result = {};
 
 	result.m[0][0] = std::cos(radian);
 	result.m[0][1] = 0.0f;
@@ -419,8 +416,8 @@ Matrix4x4 MakeRotateYMatrix(float radian) {
 	return result;
 }
 
-Matrix4x4 MakeRotateZMatrix(float radian) {
-	Matrix4x4 result = {};
+KamataEngine::Matrix4x4 MakeRotateZMatrix(float radian) {
+	KamataEngine::Matrix4x4 result = {};
 
 	result.m[0][0] = std::cos(radian);
 	result.m[0][1] = std::sin(radian);
@@ -445,18 +442,18 @@ Matrix4x4 MakeRotateZMatrix(float radian) {
 	return result;
 }
 
-Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate) {
+KamataEngine::Matrix4x4 MakeAffineMatrix(const KamataEngine::Vector3& scale, const KamataEngine::Vector3& rotate, const KamataEngine::Vector3& translate) {
 
-	Matrix4x4 result = {};
+	KamataEngine::Matrix4x4 result = {};
 
 	// 拡大縮小行列
-	Matrix4x4 scaleMatrix = MakeScaleMatrix(scale);
+	KamataEngine::Matrix4x4 scaleMatrix = MakeScaleMatrix(scale);
 	// 回転行列
-	Matrix4x4 rotateXMatrix = MakeRotateXMatrix(rotate.x);
-	Matrix4x4 rotateYMatrix = MakeRotateYMatrix(rotate.y);
-	Matrix4x4 rotateZMatrix = MakeRotateZMatrix(rotate.z);
+	KamataEngine::Matrix4x4 rotateXMatrix = MakeRotateXMatrix(rotate.x);
+	KamataEngine::Matrix4x4 rotateYMatrix = MakeRotateYMatrix(rotate.y);
+	KamataEngine::Matrix4x4 rotateZMatrix = MakeRotateZMatrix(rotate.z);
 	// 平行移動行列
-	Matrix4x4 translationMatrix = MakeTranslateMatrix(translate);
+	KamataEngine::Matrix4x4 translationMatrix = MakeTranslateMatrix(translate);
 	// 拡大縮小行列と回転行列を掛け算
 	result = Multiply(scaleMatrix, rotateXMatrix);
 	// さらにY軸回転行列を掛け算

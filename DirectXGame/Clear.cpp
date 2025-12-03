@@ -11,7 +11,7 @@ Clear::~Clear() {
 
 void Clear::Initialize() {
 
-	modelClear_ = Model::CreateFromOBJ("GameClear", true);
+	modelClear_ = KamataEngine::Model::CreateFromOBJ("GameClear", true);
 
 	// カメラ初期化
 	camera_.Initialize();
@@ -46,7 +46,7 @@ void Clear::Update() {
 		}
 		break;
 	case Phase::kMain:
-		if (Input::GetInstance()->PushKey(DIK_SPACE)) {
+		if (KamataEngine::Input::GetInstance()->PushKey(DIK_SPACE)) {
 			fade_->Start(Fade::Status::FadeOut, 1.0f);
 			phase_ = Phase::kFadeOut;
 		}
@@ -76,14 +76,14 @@ void Clear::Update() {
 
 void Clear::Draw() {
 
-	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
+	KamataEngine::DirectXCommon* dxCommon = KamataEngine::DirectXCommon::GetInstance();
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = dxCommon->GetCommandList();
 
-	Model::PreDraw(commandList);
+	KamataEngine::Model::PreDraw(commandList);
 
 	modelClear_->Draw(worldTransformClear_, camera_);
 
 	fade_->Draw();
-	Model::PostDraw();
+	KamataEngine::Model::PostDraw();
 }

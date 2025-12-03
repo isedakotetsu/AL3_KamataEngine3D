@@ -30,13 +30,13 @@ private:
 	static inline const float kTimeOverMove = 2.0f;
 
 	// ビュープロジェクション
-	Camera camera_;
-	WorldTransform worldTransformOver_;
-	WorldTransform worldTransformPlayer_;
+	KamataEngine::Camera camera_;
+	KamataEngine::WorldTransform worldTransformOver_;
+	KamataEngine::WorldTransform worldTransformPlayer_;
 	Updatetoransform* updatetransform_ = nullptr;
 
 	
-	Model* modelOver_ = nullptr;
+	KamataEngine::Model* modelOver_ = nullptr;
 	Fade* fade_ = nullptr;
 
 	float counter_ = 0.0f;

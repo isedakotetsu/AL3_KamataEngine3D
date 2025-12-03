@@ -10,7 +10,17 @@
 #include "GameScene.h"
 
 
-void Player::Initialize(Model* model, Camera* camera, const Vector3& position) {
+Player::~Player() 
+{
+	for (Bullet* bullet : bullets_) 
+	{
+		delete bullet;
+	}
+}
+
+void Player::Initialize(KamataEngine::Model* model, 
+	KamataEngine::Camera* camera, const KamataEngine::Vector3& position) 
+{
 
 	assert(model);
 	// モデル
@@ -21,6 +31,8 @@ void Player::Initialize(Model* model, Camera* camera, const Vector3& position) {
 	worldTransform_.rotation_.y = std::numbers::pi_v<float> / 2.0f;
 
 	camera_ = camera;
+
+	Bulletmodel_ = KamataEngine::Model::CreateFromOBJ("attack", true);
 }
 
 
@@ -37,17 +49,17 @@ void Player::BehaviorAttackInitialize()
 }
 
 
-void Player::InputMove() {
+void Player::InputMove() 
+{
 
-	if (onGround_) 
-	{
+	if (onGround_) {
 
 		// 左右移動操作
-		if (Input::GetInstance()->PushKey(DIK_D) || Input::GetInstance()->PushKey(DIK_A)) {
+		if (KamataEngine::Input::GetInstance()->PushKey(DIK_D) || KamataEngine::Input::GetInstance()->PushKey(DIK_A)) {
 
 			// 左右加速
-			Vector3 acceleration = {};
-			if (Input::GetInstance()->PushKey(DIK_D)) {
+			KamataEngine::Vector3 acceleration = {};
+			if (KamataEngine::Input::GetInstance()->PushKey(DIK_D)) {
 
 				if (velocity_.x < 0.0f) {
 					// 旋回の最初は移動減衰をかける
@@ -59,7 +71,7 @@ void Player::InputMove() {
 					turnFirstRotationY_ = worldTransform_.rotation_.y;
 					turnTimer_ = kTimeTurn;
 				}
-			} else if (Input::GetInstance()->PushKey(DIK_A)) {
+			} else if (KamataEngine::Input::GetInstance()->PushKey(DIK_A)) {
 				if (velocity_.x > 0.0f) {
 					// 旋回の最初は移動減衰をかける
 					velocity_.x *= (1.0f - kAttenuation);
@@ -83,21 +95,35 @@ void Player::InputMove() {
 			velocity_.x = 0.0f;
 		}
 
-		if (Input::GetInstance()->PushKey(DIK_SPACE)) {
+		if (KamataEngine::Input::GetInstance()->PushKey(DIK_SPACE)) {
 			// ジャンプ初速
-			velocity_ += Vector3(0, kJumpAcceleration / 60.0f, 0);
+			velocity_ += KamataEngine::Vector3(0, kJumpAcceleration / 60.0f, 0);
 		}
-	} 
-	else 
-	{
+	} else {
 		// 落下速度
-		velocity_ += Vector3(0, -kGravityAcceleration / 60.0f, 0);
+		velocity_ += KamataEngine::Vector3(0, -kGravityAcceleration / 60.0f, 0);
 		velocity_.y = std::max(velocity_.y, -kLimitFallSpeed);
+	}
+
+	
+}
+
+
+
+void Player::Shot(const KamataEngine::Vector3& position) 
+{
+	if (KamataEngine::Input::GetInstance()->PushKey(DIK_E)) 
+	{
+		const float kBulletSpped = 1.0f;
+		Bullet* newBullet = new Bullet();
+		KamataEngine::Vector3 BulletPos = position;
+		KamataEngine::Vector3 velocity(kBulletSpped, 0, 0);
+		newBullet->Initialize(Bulletmodel_, camera_, BulletPos, velocity);
+		bullets_.push_back(newBullet);
 	}
 }
 
-void Player::OnCollision(const Enemy* enemy) 
-{ 
+void Player::OnCollision(const Enemy* enemy) { 
 	(void)enemy;
 	
 
@@ -120,7 +146,7 @@ void Player::UpdateOnGround(const CollisionMapInfo& info)
 			onGround_ = false;
 		} else {
 
-			std::array<Vector3, kNumCorner> positionsNew;
+			std::array<KamataEngine::Vector3, kNumCorner> positionsNew;
 			for (uint32_t i = 0; i < positionsNew.size(); ++i) {
 				positionsNew[i] = CornerPosition(worldTransform_.translation_ + info.move, static_cast<Corner>(i));
 			}
@@ -129,14 +155,14 @@ void Player::UpdateOnGround(const CollisionMapInfo& info)
 			MapChipType mapChipType;
 			// 左下点の判定
 			MapChipField::IndexSet indexSet;
-			indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom] + Vector3(0, -kGroundSearchHeight, 0));
+			indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom] + KamataEngine::Vector3(0, -kGroundSearchHeight, 0));
 			mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 
 			if (mapChipType == MapChipType::kBlock) {
 				hit = true;
 			}
 			// 右下点の判定
-			indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom] + Vector3(0, -kGroundSearchHeight, 0));
+			indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom] + KamataEngine::Vector3(0, -kGroundSearchHeight, 0));
 			mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 
 			if (mapChipType == MapChipType::kBlock) {
@@ -180,7 +206,7 @@ void Player::CheckMapCollisionUp(CollisionMapInfo& info) {
 	}
 
 	// 02_07 スライド19枚目（下のfor文も）
-	std::array<Vector3, kNumCorner> positionsNew;
+	std::array<KamataEngine::Vector3, kNumCorner> positionsNew;
 
 	for (uint32_t i = 0; i < positionsNew.size(); ++i) {
 		positionsNew[i] = CornerPosition(worldTransform_.translation_ + info.move, static_cast<Corner>(i));
@@ -212,10 +238,10 @@ void Player::CheckMapCollisionUp(CollisionMapInfo& info) {
 	if (hit) {
 		// 現在座標が壁の外か判定
 		MapChipField::IndexSet indexSetNow;
-		indexSetNow = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + Vector3(0, +kHeight / 2.0f, 0));
+		indexSetNow = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + KamataEngine::Vector3(0, +kHeight / 2.0f, 0));
 		if (indexSetNow.yIndex != indexSet.yIndex) {
 			// めり込みを排除する方向に移動量を設定する
-			indexSet = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + info.move + Vector3(0, +kHeight / 2.0f, 0));
+			indexSet = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + info.move + KamataEngine::Vector3(0, +kHeight / 2.0f, 0));
 			MapChipField::Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 			info.move.y = std::max(0.0f, rect.bottom - worldTransform_.translation_.y - (kHeight / 2.0f + kBlank));
 			info.ceiling = true;
@@ -229,7 +255,7 @@ void Player::CheckMapCollisionDown(CollisionMapInfo& info)
 	{
 		return;
 	}
-	std::array<Vector3, kNumCorner> positionsNew;
+	std::array<KamataEngine::Vector3, kNumCorner> positionsNew;
 
 	for (uint32_t i = 0; i < positionsNew.size(); ++i) {
 		positionsNew[i] = CornerPosition(worldTransform_.translation_ + info.move, static_cast<Corner>(i));
@@ -259,7 +285,7 @@ void Player::CheckMapCollisionDown(CollisionMapInfo& info)
 
 	if (hit)
 	{
-		indexSet = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + info.move + Vector3(0, -kHeight / 2.0f, 0));
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + info.move + KamataEngine::Vector3(0, -kHeight / 2.0f, 0));
 			// めり込み先ブロックの範囲矩形
 			MapChipField::Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 			info.move.y = std::min(0.0f, rect.top - worldTransform_.translation_.y + (kHeight / 2.0f + kBlank));
@@ -273,7 +299,7 @@ void Player::CheckMapCollisionRight(CollisionMapInfo& info)
 	if (info.move.x <= 0) {
 		return;
 	}
-	std::array<Vector3, kNumCorner> positionsNew;
+	std::array<KamataEngine::Vector3, kNumCorner> positionsNew;
 
 	for (uint32_t i = 0; i < positionsNew.size(); ++i) {
 		positionsNew[i] = CornerPosition(worldTransform_.translation_ + info.move, static_cast<Corner>(i));
@@ -299,11 +325,11 @@ void Player::CheckMapCollisionRight(CollisionMapInfo& info)
 	if (hit) {
 		
 		MapChipField::IndexSet indexSetNow;
-		indexSetNow = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + Vector3(+kWidth / 2.0f, 0, 0));
+		indexSetNow = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + KamataEngine::Vector3(+kWidth / 2.0f, 0, 0));
 		if (indexSetNow.xIndex != indexSet.xIndex)
 		{
 			// めり込みを排除する方向に移動量を設定する
-			indexSet = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + info.move + Vector3(+kWidth / 2.0f, 0, 0));
+			indexSet = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + info.move + KamataEngine::Vector3(+kWidth / 2.0f, 0, 0));
 			// めり込み先ブロックの範囲矩形
 			MapChipField::Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 			info.move.x = std::max(0.0f, rect.left - worldTransform_.translation_.x - (kWidth / 2.0f + kBlank));
@@ -318,7 +344,7 @@ void Player::CheckMapCollisionLeft(CollisionMapInfo& info)
 		return;
 	}
 
-	std::array<Vector3, kNumCorner> positionsNew;
+	std::array<KamataEngine::Vector3, kNumCorner> positionsNew;
 
 	for (uint32_t i = 0; i < positionsNew.size(); ++i) {
 		positionsNew[i] = CornerPosition(worldTransform_.translation_ + info.move, static_cast<Corner>(i));
@@ -349,11 +375,11 @@ void Player::CheckMapCollisionLeft(CollisionMapInfo& info)
 	if (hit) {
 	
 		MapChipField::IndexSet indexSetNow;
-		indexSetNow = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + Vector3(-kWidth / 2.0f, 0, 0));
+		indexSetNow = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + KamataEngine::Vector3(-kWidth / 2.0f, 0, 0));
 
 		if (indexSetNow.xIndex != indexSet.xIndex) {
 		
-			indexSet = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + info.move + Vector3(-kWidth / 2.0f, 0, 0));
+			indexSet = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + info.move + KamataEngine::Vector3(-kWidth / 2.0f, 0, 0));
 			MapChipField::Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 			info.move.x = std::max(0.0f, rect.right - worldTransform_.translation_.x - (kWidth / 2.0f + kBlank));
 			info.hitWall = true;
@@ -362,9 +388,9 @@ void Player::CheckMapCollisionLeft(CollisionMapInfo& info)
 }
 
 
-Vector3 Player::CornerPosition(const Vector3& center, Corner corner) {
+KamataEngine::Vector3 Player::CornerPosition(const KamataEngine::Vector3& center, Corner corner) {
 
-	Vector3 offsetTable[] = {
+	KamataEngine::Vector3 offsetTable[] = {
 	    {+kWidth / 2.0f, -kHeight / 2.0f, 0}, //  kRightBottom
 	    {-kWidth / 2.0f, -kHeight / 2.0f, 0}, //  kLeftBottom
 	    {+kWidth / 2.0f, +kHeight / 2.0f, 0}, //  kRightTop
@@ -376,9 +402,9 @@ Vector3 Player::CornerPosition(const Vector3& center, Corner corner) {
 
 
 
-Vector3 Player::GetWorldPosition() 
+KamataEngine::Vector3 Player::GetWorldPosition() 
 { 
-	Vector3 worldPos;
+	KamataEngine::Vector3 worldPos;
 
 	worldPos.x = worldTransform_.matWorld_.m[3][0];
 	worldPos.y = worldTransform_.matWorld_.m[3][1];
@@ -392,7 +418,7 @@ Vector3 Player::GetWorldPosition()
 
 AABB Player::GetAABB() 
 { 
-	Vector3 worldPos = GetWorldPosition();
+	KamataEngine::Vector3 worldPos = GetWorldPosition();
 	AABB aabb;
 
     aabb.min = {worldPos.x - kWidth / 2.0f, worldPos.y - kHeight / 2.0f, worldPos.z - kWidth / 2.0f};
@@ -459,6 +485,22 @@ void Player ::UpDate()
 	
 	
 	BehaviorRootUpdate();
+
+	// 発射タイマー更新
+	if (shotTimer_ > 0) {
+		shotTimer_--;
+	}
+
+	// 攻撃パターン
+	if (shotTimer_ == 0) {
+		Shot(worldTransform_.translation_);
+		shotTimer_ = kShotInterval_; // 次の発射までの待ち時間
+	}
+
+	// 弾の更新
+	for (Bullet* bullet : bullets_) {
+		bullet->Update();
+	}
 	
 	// ワールド行列更新（アフィン変換～DirectXに転送）
 	updatetransform_->WorldTransformUpdate(worldTransform_);
@@ -467,11 +509,15 @@ void Player ::UpDate()
 }
 
 void Player::Draw() {
-	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
+	KamataEngine::DirectXCommon* dxCommon = KamataEngine::DirectXCommon::GetInstance();
 
-	Model::PreDraw(dxCommon->GetCommandList());
+	KamataEngine::Model::PreDraw(dxCommon->GetCommandList());
 
 	model_->Draw(worldTransform_, *camera_);
+	for (Bullet* bullet : bullets_) 
+	{
+		bullet->Draw();
+	}
 
-	Model::PostDraw();
+	KamataEngine::Model::PostDraw();
 }

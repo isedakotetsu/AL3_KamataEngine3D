@@ -3,9 +3,9 @@
 void Fade::Initialize()
 { 
 	
-	sprite_ = Sprite::Create(0, Vector2{});
-	sprite_->SetSize(Vector2(WinApp::kWindowWidth, WinApp::kWindowHeight));
-	sprite_->SetColor(Vector4(0, 0, 0, 1));
+	sprite_ = KamataEngine::Sprite::Create(0, KamataEngine::Vector2{});
+	sprite_->SetSize(KamataEngine::Vector2(KamataEngine::WinApp::kWindowWidth, KamataEngine::WinApp::kWindowHeight));
+	sprite_->SetColor(KamataEngine::Vector4(0, 0, 0, 1));
 }
 
 void Fade::Update()
@@ -20,7 +20,7 @@ void Fade::Update()
 		if (counter_ >= duration_) {
 			counter_ = duration_;
 		}
-		sprite_->SetColor(Vector4(0, 0, 0, std::clamp(1.0f - counter_ / duration_, 0.0f, 1.0f)));
+		sprite_->SetColor(KamataEngine::Vector4(0, 0, 0, std::clamp(1.0f - counter_ / duration_, 0.0f, 1.0f)));
 		break;
 	case Status::FadeOut:
 		//1フレーム分の秒数をカウントアップ
@@ -31,7 +31,7 @@ void Fade::Update()
 			counter_ = duration_;
 		}
 		//0.0fから1.0fの間で、経過時間がフェード持続時間近づくほどアルファ値を大きくする
-		sprite_->SetColor(Vector4(0, 0, 0, std::clamp(counter_ / duration_, 0.0f, 1.0f)));
+		sprite_->SetColor(KamataEngine::Vector4(0, 0, 0, std::clamp(counter_ / duration_, 0.0f, 1.0f)));
 
 		break;
 
@@ -45,10 +45,10 @@ void Fade::Draw()
 	{
 		return;
 	}
-	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
-	Sprite::PreDraw(dxCommon->GetCommandList()); 
+	KamataEngine::DirectXCommon* dxCommon = KamataEngine::DirectXCommon::GetInstance();
+	KamataEngine::Sprite::PreDraw(dxCommon->GetCommandList()); 
 	sprite_->Draw();
-	Sprite::PostDraw();
+	KamataEngine::Sprite::PostDraw();
 }
 
 void Fade::Start(Status status, float duration) 

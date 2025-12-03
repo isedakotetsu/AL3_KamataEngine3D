@@ -14,8 +14,8 @@ void CameraController::Initialize(KamataEngine::Camera* camera)
 void CameraController::Update() 
 {
 	
-	const WorldTransform& targetWorldTransform = target_->GetWorldTransform();
-	const Vector3& targetVelocity = target_->GetVelocity();
+	const KamataEngine::WorldTransform& targetWorldTransform = target_->GetWorldTransform();
+	const KamataEngine::Vector3& targetVelocity = target_->GetVelocity();
 	destination_ = targetWorldTransform.translation_ + target0ffset_ + targetVelocity * kVelocityBias;
 
 	camera_->translation_ = Lerp(camera_->translation_, destination_, kInterpolationRate);
@@ -42,7 +42,7 @@ void CameraController::Update()
 void CameraController::Reset() 
 { 
 	//追従対象のワールドトランスフォームを参照
-	const WorldTransform& targetWorldTransform = target_->GetWorldTransform();
+	const KamataEngine::WorldTransform& targetWorldTransform = target_->GetWorldTransform();
 	//追従対象とオフセットからカメラの座標を計算
 	camera_->translation_ = targetWorldTransform.translation_ + target0ffset_;
 
