@@ -109,19 +109,22 @@ void Player::InputMove()
 }
 
 
-
-void Player::Shot(const KamataEngine::Vector3& position) 
-{
-	if (KamataEngine::Input::GetInstance()->PushKey(DIK_E)) 
-	{
+void Player::Shot(const KamataEngine::Vector3& position) {
+	if (KamataEngine::Input::GetInstance()->PushKey(DIK_E)) {
 		const float kBulletSpped = 1.0f;
 		Bullet* newBullet = new Bullet();
 		KamataEngine::Vector3 BulletPos = position;
-		KamataEngine::Vector3 velocity(kBulletSpped, 0, 0);
+
+		// 左右方向だけで速度を決定する
+		float dir = (lrDirection_ == LRDirection::kRight) ? 1.0f : -1.0f;
+
+		KamataEngine::Vector3 velocity(dir * kBulletSpped, 0.0f, 0.0f);
+
 		newBullet->Initialize(Bulletmodel_, camera_, BulletPos, velocity);
 		bullets_.push_back(newBullet);
 	}
 }
+
 
 void Player::OnCollision(const Enemy* enemy) { 
 	(void)enemy;
