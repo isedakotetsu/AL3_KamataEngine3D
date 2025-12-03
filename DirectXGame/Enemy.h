@@ -3,6 +3,7 @@
 #include "Math.h"
 #include "Updatetransform.h"
 class Player;
+class Bullet;
 class Enemy
 {
 public:

@@ -105,6 +105,7 @@ void Enemy::OnCollision(const Player* player)
 { 
 	
 	(void)player; 
+	
 
 	if (behavior_ == Behavior::kDefeated) {
 		// 敵がやられているなら何もしない

@@ -116,31 +116,54 @@ void GameScene::CheckAllCollisions()
 {
 
 		// 判定対象1と2の座標
-		AABB aabb1, aabb2;
+		AABB player1, enemy2, bullet3;
 
-#pragma region 自キャラと敵キャラの当たり判定
+#pragma region 自キャラと敵キャラとバレットの当たり判定
 		{
 			// 自キャラの座標
-		    aabb1 = player_->GetAABB();
+		    player1 = player_->GetAABB();
 
+			
 			// 自キャラと敵弾全ての当たり判定
-		    for (Enemy* enemy : enemies_) {
+		    for (Enemy* enemy : enemies_) 
+			{
 
 				// コリジョン無効の敵はスキップ
 				if (enemy->IsCollisionDisabled())
 					continue;
 
 				// 敵弾の座標
-				aabb2 = enemy->GetAABB();
+				enemy2 = enemy->GetAABB();
+
+				for (Bullet* bullet : bullets_) {
+
+				    // 弾の座標
+				    bullet3 = bullet->GetAABB();
+			    }
 
 				// AABB同士の交差判定
-				if (IsCollision(aabb1, aabb2)) {
+				if (IsCollision(player1, enemy2)) 
+				{
 					// 自キャラの衝突時コールバックを呼び出す
 				    player_->OnCollision(enemy);
 					// 敵弾の衝突時コールバックを呼び出す
 				    enemy->OnCollision(player_);
 				}
+
+				if (IsCollision(bullet3, enemy2)) 
+				{
+				    for (Bullet* bullet : bullets_) 
+					{
+					    // 自キャラの衝突時コールバックを呼び出す
+					    bullet->OnCollision(enemy);
+					    
+				    }
+				   
+			    }
+
 			}
+		    
+		    
 		}
 #pragma endregion
 	

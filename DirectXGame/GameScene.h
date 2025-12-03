@@ -103,6 +103,9 @@ private:
 
 	DeathParticles* deathParticles_ = nullptr;
 
+
+	//bullet
+	std::list<Bullet*> bullets_;
 	
 
 

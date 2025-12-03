@@ -13,6 +13,21 @@ void Bullet::Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera
 	velocity_ = velocity;
 }
 
+AABB Bullet::GetAABB()
+{
+	KamataEngine::Vector3 worldPos = GetWorldPosition();
+	AABB aabb;
+
+	aabb.min = {worldPos.x - kWidth / 2.0f, worldPos.y - kHeight / 2.0f, worldPos.z - kWidth / 2.0f};
+	aabb.max = {worldPos.x + kWidth / 2.0f, worldPos.y + kHeight / 2.0f, worldPos.z + kWidth / 2.0f};
+	return aabb;
+}
+void Bullet::OnCollision(const Enemy* enemy) 
+{
+	(void)enemy;
+
+	isDead_ = true;
+}
 void Bullet::Update() {
 	worldTransform_.translation_.x += velocity_.x ;
 	worldTransform_.translation_.y += velocity_.y / 4;
