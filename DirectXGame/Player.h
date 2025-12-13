@@ -57,6 +57,8 @@ public:
 
 	const KamataEngine::WorldTransform& GetWorldTransform() const { return worldTransform_; }
 	const KamataEngine::Vector3& GetVelocity() const { return velocity_; }
+	const std::list<Bullet*>& GetBullets() const { return bullets_; }
+
 	AABB GetAABB();
 
 	KamataEngine::Vector3 GetWorldPosition();
@@ -147,4 +149,6 @@ private:
 	//バレット用変数
 	int shotTimer_ = 0;
 	const int kShotInterval_ = 30; // 60 フレームに1発 (1秒に1発)
+
+
 };

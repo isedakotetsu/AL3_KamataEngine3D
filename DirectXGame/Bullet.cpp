@@ -28,6 +28,10 @@ void Bullet::OnCollision(const Enemy* enemy)
 
 	isDead_ = true;
 }
+
+KamataEngine::Vector3 Bullet::GetWorldPosition() { return worldTransform_.translation_; }
+
+
 void Bullet::Update() {
 	worldTransform_.translation_.x += velocity_.x ;
 	worldTransform_.translation_.y += velocity_.y / 4;
@@ -36,3 +40,4 @@ void Bullet::Update() {
 }
 
 void Bullet::Draw() { model_->Draw(worldTransform_, *camera_); }
+

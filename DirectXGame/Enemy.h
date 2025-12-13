@@ -27,6 +27,7 @@ public:
 	AABB GetAABB();
 
 	void OnCollision(const Player* player);
+	void OnCollisionBullet(const Bullet* bullet);
 
 	
 	bool IsDead() const { return isDead_; }
