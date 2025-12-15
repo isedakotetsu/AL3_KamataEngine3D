@@ -2,7 +2,9 @@
 #include "KamataEngine.h"
 #include "Math.h"
 #include "Updatetransform.h"
+
 class Enemy;
+class MapChipField;
 class Bullet {
 public:
 	void Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera, KamataEngine::Vector3& position, const KamataEngine::Vector3& velocity);
@@ -11,6 +13,8 @@ public:
 	AABB GetAABB();
 	void OnCollision(const Enemy* enemy);
 	KamataEngine::Vector3 GetWorldPosition();
+	void SetMapChipField(MapChipField* mapchipField) { mapchipField_ = mapchipField; }
+
 
 	// ですフラグ
 	bool isDead_ = false;
@@ -26,4 +30,5 @@ private:
 	KamataEngine::Model* model_ = nullptr;
 	KamataEngine::Camera* camera_ = nullptr;
 	KamataEngine::Vector3 velocity_ = {};
+	MapChipField* mapchipField_ = nullptr;
 };

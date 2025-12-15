@@ -109,21 +109,44 @@ void Player::InputMove()
 }
 
 
-void Player::Shot(const KamataEngine::Vector3& position) {
-	if (KamataEngine::Input::GetInstance()->PushKey(DIK_E)) {
-		const float kBulletSpped = 1.0f;
-		Bullet* newBullet = new Bullet();
-		KamataEngine::Vector3 BulletPos = position;
-
-		// 左右方向だけで速度を決定する
-		float dir = (lrDirection_ == LRDirection::kRight) ? 1.0f : -1.0f;
-
-		KamataEngine::Vector3 velocity(dir * kBulletSpped, 0.0f, 0.0f);
-
-		newBullet->Initialize(Bulletmodel_, camera_, BulletPos, velocity);
-		bullets_.push_back(newBullet);
+void Player::Shot(const KamataEngine::Vector3& position)
+{
+	if (!KamataEngine::Input::GetInstance()->PushKey(DIK_E)) 
+	{
+		return;
 	}
+
+	const float kBulletSpeed = 0.5f;
+
+	KamataEngine::Vector3 dir = {0, 0, 0};
+
+	
+	if (KamataEngine::Input::GetInstance()->PushKey(DIK_W)) 
+	{
+		dir.y = 1.0f; // 上
+	} else if (KamataEngine::Input::GetInstance()->PushKey(DIK_S)) 
+	{
+		dir.y = -1.0f; // 下
+	} else if (KamataEngine::Input::GetInstance()->PushKey(DIK_D))
+	{
+		dir.x = 1.0f; // 右
+	} else if (KamataEngine::Input::GetInstance()->PushKey(DIK_A))
+	{
+		dir.x = -1.0f; // 左
+	} else {
+		// 方向キーが押されていないときは向いている方向
+		dir.x = (lrDirection_ == LRDirection::kRight) ? 1.0f : -1.0f;
+	}
+
+	Bullet* newBullet = new Bullet();
+	newBullet->SetMapChipField(mapChipField_);
+	KamataEngine::Vector3 velocity = dir * kBulletSpeed;
+
+	KamataEngine::Vector3 BulletPos = position;
+	newBullet->Initialize(Bulletmodel_, camera_, BulletPos, velocity);
+	bullets_.push_back(newBullet);
 }
+
 
 
 void Player::OnCollision(const Enemy* enemy) { 
@@ -504,7 +527,14 @@ void Player ::UpDate()
 	for (Bullet* bullet : bullets_) {
 		bullet->Update();
 	}
-	
+	bullets_.remove_if([](Bullet* bullet) 
+		{
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+	});
 	// ワールド行列更新（アフィン変換～DirectXに転送）
 	updatetransform_->WorldTransformUpdate(worldTransform_);
 

@@ -119,11 +119,12 @@ void Enemy::OnCollisionBullet(const Bullet* bullet)
 {
 	(void)bullet;
 
-	if (behavior_ == Behavior::kDefeated) {
+	if (behavior_ == Behavior::kDefeated) 
+	{
 		return;
 	}
 
-	// ★ やられ状態へ移行リクエスト
+	
 	behaviorRequest_ = Behavior::kDefeated;
 
 	// ★ 多重ヒット防止（重要）
