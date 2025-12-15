@@ -3,6 +3,7 @@
 #include "Math.h"
 #include "Updatetransform.h"
 #include "Bullet.h"
+#include "BulletType.h"
 class MapChipField;
 class Enemy;
 class Player 
@@ -62,6 +63,8 @@ public:
 	AABB GetAABB();
 
 	KamataEngine::Vector3 GetWorldPosition();
+
+	
 
 	// ですフラグ
 	bool isDead_ = false;
@@ -149,6 +152,9 @@ private:
 	//バレット用変数
 	int shotTimer_ = 0;
 	const int kShotInterval_ = 30; // 60 フレームに1発 (1秒に1発)
+
+	BulletType currentBulletType_ = BulletType::Straight;
+
 
 
 };

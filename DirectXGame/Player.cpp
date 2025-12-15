@@ -139,11 +139,11 @@ void Player::Shot(const KamataEngine::Vector3& position)
 	}
 
 	Bullet* newBullet = new Bullet();
-	newBullet->SetMapChipField(mapChipField_);
-	KamataEngine::Vector3 velocity = dir * kBulletSpeed;
-
 	KamataEngine::Vector3 BulletPos = position;
+	KamataEngine::Vector3 velocity = dir * kBulletSpeed;
 	newBullet->Initialize(Bulletmodel_, camera_, BulletPos, velocity);
+	newBullet->SetBulletType(currentBulletType_);
+	newBullet->SetMapChipField(mapChipField_);
 	bullets_.push_back(newBullet);
 }
 
@@ -511,6 +511,17 @@ void Player ::UpDate()
 	
 	
 	BehaviorRootUpdate();
+
+	// デバッグ用：キーで武器切り替え
+	if (KamataEngine::Input::GetInstance()->TriggerKey(DIK_1)) 
+	{
+		currentBulletType_ = BulletType::Straight;
+	}
+	if (KamataEngine::Input::GetInstance()->TriggerKey(DIK_2)) 
+	{
+		currentBulletType_ = BulletType::Bounce;
+	}
+
 
 	// 発射タイマー更新
 	if (shotTimer_ > 0) {

@@ -34,9 +34,9 @@ KamataEngine::Vector3 Bullet::GetWorldPosition() { return worldTransform_.transl
 
 void Bullet::Update() 
 {
-	worldTransform_.translation_.x += velocity_.x;
-	worldTransform_.translation_.y += velocity_.y;
-	worldTransform_.translation_.z += velocity_.z;
+	// 移動
+	worldTransform_.translation_ += velocity_;
+
 	// マップ衝突判定
 	if (mapchipField_) 
 	{
@@ -46,12 +46,24 @@ void Bullet::Update()
 
 		if (type == MapChipType::kBlock) 
 		{
-			isDead_ = true;
-			return;
+			if (bulletType_ == BulletType::Bounce) 
+			{
+				// バウンド弾：上下反転（まずは簡易）
+				velocity_.y *= -1.0f;
+			}
+			else 
+			{
+				// 直進弾：消滅
+				isDead_ = true;
+				return;
+			}
 		}
 	}
+
+	// ワールド行列更新
 	updatetransform_->WorldTransformUpdate(worldTransform_);
 }
+
 
 
 void Bullet::Draw() 
