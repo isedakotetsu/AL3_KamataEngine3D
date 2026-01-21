@@ -71,14 +71,14 @@ public:
 	// デスフラグのgetter
 	bool IsDead() const { return isDead_; }
 
+
+	bool HasArmor() const { return hasArmor_; }
+
+
 	
 
 	
 private:
-
-
-	
-
 
 	// ワールド変換データ
 	KamataEngine::WorldTransform worldTransform_;
@@ -154,6 +154,16 @@ private:
 	const int kShotInterval_ = 30; // 60 フレームに1発 (1秒に1発)
 
 	BulletType currentBulletType_ = BulletType::Straight;
+
+	//プレイヤーの鎧
+	KamataEngine::Model* armorModel_ = nullptr;
+	KamataEngine::WorldTransform armorWorldTransform_;
+	bool hasArmor_ = true;
+
+	//アーマーのクールダウン
+	int invincibleTimer_ = 0;
+	static const int kInvincibleTime_ = 60; 
+
 
 
 

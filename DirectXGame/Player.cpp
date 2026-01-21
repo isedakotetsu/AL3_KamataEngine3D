@@ -16,6 +16,9 @@ Player::~Player()
 	{
 		delete bullet;
 	}
+
+	delete armorModel_;
+	armorModel_ = nullptr;
 }
 
 void Player::Initialize(KamataEngine::Model* model, 
@@ -33,6 +36,14 @@ void Player::Initialize(KamataEngine::Model* model,
 	camera_ = camera;
 
 	Bulletmodel_ = KamataEngine::Model::CreateFromOBJ("attack", true);
+
+	//鎧モデル
+	armorModel_ = KamataEngine::Model::CreateFromOBJ("armor", true);
+	armorWorldTransform_.Initialize();
+	armorWorldTransform_.translation_ = worldTransform_.translation_;
+	armorWorldTransform_.rotation_ = worldTransform_.rotation_;
+	hasArmor_ = true;
+
 }
 
 
@@ -149,11 +160,22 @@ void Player::Shot(const KamataEngine::Vector3& position)
 
 
 
-void Player::OnCollision(const Enemy* enemy) { 
+void Player::OnCollision(const Enemy* enemy) 
+{ 
 	(void)enemy;
-	
 
-	isDead_ = true;
+	if (invincibleTimer_ > 0) 
+	{
+		return; 
+	}
+	invincibleTimer_ = kInvincibleTime_;
+
+	if (hasArmor_) {
+		hasArmor_ = false; // 鎧が剥がれる（1回目）
+		return;
+	}
+
+	isDead_ = true; // 2回目で死亡
 }
 
 
@@ -508,9 +530,21 @@ void Player::BehaviorAttackUpdate()
 
 void Player ::UpDate() 
 { 
-	
+	//アーマーのクールダウン
+	if (invincibleTimer_ > 0) 
+	{
+		invincibleTimer_--;
+	}
+
 	
 	BehaviorRootUpdate();
+
+	armorWorldTransform_.translation_ = worldTransform_.translation_;
+	armorWorldTransform_.rotation_ = worldTransform_.rotation_;
+	armorWorldTransform_.scale_ = worldTransform_.scale_;
+
+	armorWorldTransform_.matWorld_ = MakeAffineMatrix(armorWorldTransform_.scale_, armorWorldTransform_.rotation_, armorWorldTransform_.translation_);
+	armorWorldTransform_.TransferMatrix();
 
 	// デバッグ用：キーで武器切り替え
 	if (KamataEngine::Input::GetInstance()->TriggerKey(DIK_1)) 
@@ -558,6 +592,12 @@ void Player::Draw() {
 	KamataEngine::Model::PreDraw(dxCommon->GetCommandList());
 
 	model_->Draw(worldTransform_, *camera_);
+
+	if (hasArmor_ && armorModel_) 
+	{
+		armorModel_->Draw(armorWorldTransform_, *camera_);
+	}
+
 	for (Bullet* bullet : bullets_) 
 	{
 		bullet->Draw();
