@@ -199,7 +199,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bullet.h" />
-    <ClInclude Include="BulletType.h" />
     <ClInclude Include="CameraController.h" />
     <ClInclude Include="Clear.h" />
     <ClInclude Include="DeathParticles.h" />

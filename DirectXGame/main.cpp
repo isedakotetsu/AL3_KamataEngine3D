@@ -35,7 +35,7 @@ void DrawScene();
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 	
-	KamataEngine::Initialize(L"AL3");
+	KamataEngine::Initialize(L"LE2C_06_イセダ_コテツ_ELF FOREST");
 
 	// DirectXCommonインスタンスの取得
 	KamataEngine::DirectXCommon* dxCommon = KamataEngine::DirectXCommon::GetInstance();
