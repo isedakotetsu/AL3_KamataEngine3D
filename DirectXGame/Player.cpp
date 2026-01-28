@@ -44,6 +44,10 @@ void Player::Initialize(KamataEngine::Model* model,
 	armorWorldTransform_.rotation_ = worldTransform_.rotation_;
 	hasArmor_ = true;
 
+	//跳ねる鎧の初期化
+	armorPopWorldTransform_.Initialize();
+
+
 }
 
 
@@ -161,22 +165,41 @@ void Player::Shot(const KamataEngine::Vector3& position)
 
 
 void Player::OnCollision(const Enemy* enemy) 
-{ 
+{
 	(void)enemy;
 
-	if (invincibleTimer_ > 0) 
-	{
-		return; 
-	}
-	invincibleTimer_ = kInvincibleTime_;
-
-	if (hasArmor_) {
-		hasArmor_ = false; // 鎧が剥がれる（1回目）
+	if (invincibleTimer_ > 0) {
 		return;
 	}
 
-	isDead_ = true; // 2回目で死亡
+	//クールダウン開始
+	invincibleTimer_ = kInvincibleTime_;
+
+	// 鎧ありなら剥がして跳ねる鎧を出す
+	if (hasArmor_) 
+	{
+		hasArmor_ = false;
+
+		
+		armorPopActive_ = true;
+		armorPopTimer_ = kArmorPopLife_;
+
+		armorPopWorldTransform_.translation_ = worldTransform_.translation_;
+		armorPopWorldTransform_.rotation_ = worldTransform_.rotation_;
+		armorPopWorldTransform_.scale_ = worldTransform_.scale_;
+
+		float dir = (lrDirection_ == LRDirection::kRight) ? 1.0f : -1.0f;
+		armorPopVelocity_ = {0.20f * dir, 0.35f, 0.0f};
+		armorPopAngularVelZ_ = 0.25f * dir;
+
+		return;
+	}
+
+	// 鎧なしで当たったら死亡
+	isDead_ = true;
 }
+
+
 
 
 void Player::CheckMapCollision(CollisionMapInfo& info) 
@@ -538,13 +561,40 @@ void Player ::UpDate()
 
 	
 	BehaviorRootUpdate();
+	if (hasArmor_)
+	{
+		armorWorldTransform_.translation_ = worldTransform_.translation_;
+		armorWorldTransform_.rotation_ = worldTransform_.rotation_;
+		armorWorldTransform_.scale_ = worldTransform_.scale_;
 
-	armorWorldTransform_.translation_ = worldTransform_.translation_;
-	armorWorldTransform_.rotation_ = worldTransform_.rotation_;
-	armorWorldTransform_.scale_ = worldTransform_.scale_;
+		armorWorldTransform_.matWorld_ = MakeAffineMatrix(armorWorldTransform_.scale_, armorWorldTransform_.rotation_, armorWorldTransform_.translation_);
+		armorWorldTransform_.TransferMatrix();
+	}
 
-	armorWorldTransform_.matWorld_ = MakeAffineMatrix(armorWorldTransform_.scale_, armorWorldTransform_.rotation_, armorWorldTransform_.translation_);
-	armorWorldTransform_.TransferMatrix();
+	//跳ねる鎧
+	if (armorPopActive_)
+	{
+
+		
+		armorPopVelocity_.y += -0.02f;
+
+		// 位置更新
+		armorPopWorldTransform_.translation_ += armorPopVelocity_;
+
+		// 回転更新
+		armorPopWorldTransform_.rotation_.z += armorPopAngularVelZ_;
+
+		// タイマー
+		armorPopTimer_--;
+		if (armorPopTimer_ <= 0) {
+			armorPopActive_ = false;
+		}
+
+	
+		armorPopWorldTransform_.matWorld_ = MakeAffineMatrix(armorPopWorldTransform_.scale_, armorPopWorldTransform_.rotation_, armorPopWorldTransform_.translation_);
+		armorPopWorldTransform_.TransferMatrix();
+	}
+
 
 	// デバッグ用：キーで武器切り替え
 	if (KamataEngine::Input::GetInstance()->TriggerKey(DIK_1)) 
@@ -592,10 +642,15 @@ void Player::Draw() {
 	KamataEngine::Model::PreDraw(dxCommon->GetCommandList());
 
 	model_->Draw(worldTransform_, *camera_);
-
+	//通常アーマー
 	if (hasArmor_ && armorModel_) 
 	{
 		armorModel_->Draw(armorWorldTransform_, *camera_);
+	}
+
+	// 被弾時：飛んでいく鎧
+	if (armorPopActive_ && armorModel_) {
+		armorModel_->Draw(armorPopWorldTransform_, *camera_);
 	}
 
 	for (Bullet* bullet : bullets_) 

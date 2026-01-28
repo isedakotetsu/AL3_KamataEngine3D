@@ -41,7 +41,7 @@ void Enemy::UpDate()
 	// 歩行
 	case Behavior::kWalk:
 		//// 02_09 16枚目 移動
-		//worldTransform_.translation_ += velocity_;
+		worldTransform_.translation_ += velocity_;
 
 		// 02_09 20枚目
 		walkTimer_ += 1.0f / 60.0f;

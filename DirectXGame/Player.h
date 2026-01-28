@@ -164,6 +164,17 @@ private:
 	int invincibleTimer_ = 0;
 	static const int kInvincibleTime_ = 60; 
 
+	//跳ねる鎧
+	bool armorPopActive_ = false;
+	int armorPopTimer_ = 0;
+	static const int kArmorPopLife_ = 45; 
+
+	KamataEngine::Vector3 armorPopVelocity_ = {};
+	float armorPopAngularVelZ_ = 0.0f;
+
+	KamataEngine::WorldTransform armorPopWorldTransform_;
+
+
 
 
 

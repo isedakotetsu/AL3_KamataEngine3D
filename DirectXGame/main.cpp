@@ -1,3 +1,4 @@
+#include "KamataEngine.h"
 #include "GameScene.h"
 #include "TitleScene.h"
 #include <Windows.h>
@@ -5,16 +6,15 @@
 #include "Clear.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "Bgm.h"
 
+using namespace KamataEngine;
 
 GameScene* gameScene = nullptr;
 Over* gameOverScene = nullptr;
 Clear* gameClearScene = nullptr;
 Player* player = nullptr;
 Enemy* enemy = nullptr;
-
-
-
 TitleScene* titleScene = nullptr;
 
 enum class Scene 
@@ -31,6 +31,15 @@ Scene scene = Scene::kUnknown;
 void ChageScene();
 void UpdateScene();
 void DrawScene();
+
+
+BGM* bgm_ = nullptr;
+
+uint32_t gameClearBgmHandle_;
+uint32_t gamePlayBgmHandle_;
+uint32_t titleBgmHandle_;
+uint32_t overBgm_;
+
     // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
@@ -40,13 +49,17 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	// DirectXCommonインスタンスの取得
 	KamataEngine::DirectXCommon* dxCommon = KamataEngine::DirectXCommon::GetInstance();
 
-	
-
-	
 	scene = Scene::kTitle;
 	titleScene = new TitleScene;
 	titleScene->Initialize();
 
+	gameClearBgmHandle_ = Audio::GetInstance()->LoadWave("./BGM/clear.mp3");
+	gamePlayBgmHandle_ = Audio::GetInstance()->LoadWave("./BGM/gameplay.mp3");
+	titleBgmHandle_ = Audio::GetInstance()->LoadWave("./BGM/title.mp3");
+	overBgm_ = Audio::GetInstance()->LoadWave("./BGM/GAMEover.mp3");
+
+	bgm_ = new BGM();
+	bgm_->Initialize();
 	// メインループ
 	while (true) {
 		// エンジンの更新
@@ -82,13 +95,17 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 	return 0;
 }
+void ChageScene() {
+	switch (scene) {
+	case Scene::kTitle:
+		if (!bgm_->IsPlaying())
+			bgm_->BGMPlay(titleBgmHandle_);
 
-void ChageScene() 
-{
-	switch (scene) 
-	{
-	 case Scene::kTitle:
 		if (titleScene->IsFinished()) {
+
+	
+			bgm_->BGMStop();
+			bgm_->BGMPlay(gamePlayBgmHandle_);
 
 			scene = Scene::kGame;
 			delete titleScene;
@@ -97,17 +114,25 @@ void ChageScene()
 			gameScene->Initialize();
 		}
 		break;
-	 case Scene::kGame:
-		// 02_12 30枚目
 
-		// シーン変更
+	case Scene::kGame:
+		
+
 		if (gameScene->GetPlayer()->IsDead()) {
+			
+			bgm_->BGMStop();
+			bgm_->BGMPlay(overBgm_);
+
 			scene = Scene::kOver;
 			delete gameScene;
 			gameScene = nullptr;
-			gameOverScene =new Over;
+			gameOverScene = new Over;
 			gameOverScene->Initialize();
 		} else if (gameScene->AreAllEnemiesDefeated()) {
+		
+			bgm_->BGMStop();
+			bgm_->BGMPlay(gameClearBgmHandle_);
+
 			scene = Scene::kClear;
 			delete gameScene;
 			gameScene = nullptr;
@@ -115,8 +140,12 @@ void ChageScene()
 			gameClearScene->Initialize();
 		}
 		break;
-	 case Scene::kClear:
+
+	case Scene::kClear:
+	
 		if (gameClearScene->IsFinished()) {
+			bgm_->BGMStop();
+
 			scene = Scene::kTitle;
 			delete gameClearScene;
 			gameClearScene = nullptr;
@@ -124,8 +153,11 @@ void ChageScene()
 			titleScene->Initialize();
 		}
 		break;
-	 case Scene::kOver:
+
+	case Scene::kOver:
 		if (gameOverScene->IsFinished()) {
+			bgm_->BGMStop();
+
 			scene = Scene::kTitle;
 			delete gameOverScene;
 			gameOverScene = nullptr;
@@ -135,6 +167,7 @@ void ChageScene()
 		break;
 	}
 }
+
 
 void UpdateScene() 
 {
